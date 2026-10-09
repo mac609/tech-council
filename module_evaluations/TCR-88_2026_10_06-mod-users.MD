@@ -1,500 +1,422 @@
-# mod-users
+v3 mod-users
 
-**Jira:** TCR-88
-**Evaluation date:** 2026-10-06
-**Application:** app-platform-minimal
-**Module type:** Backend
+# Technical Council Module Evaluation: mod-users
 
-**Source under evaluation:**
-TO BE CONFIRMED. Current candidate: [mod-users v19.6.2](https://github.com/folio-org/mod-users/releases/tag/v19.6.2), commit `361c1ff`.
+**Module:** `mod-users`
+**Version reviewed:** `v19.6.2`
+**Evaluation date:** October 9, 2026
+**Repository:** [folio-org/mod-users](https://github.com/folio-org/mod-users/tree/v19.6.2)
+**Acceptance criteria:** [FOLIO Technical Council Module Acceptance Criteria](https://github.com/folio-org/tech-council/blob/master/MODULE_ACCEPTANCE_CRITERIA.MD)
 
-**Module description:**
-Stores and serves the central user record (identity, contact info, addresses, status, profile picture) for a FOLIO tenant. Other modules call this API to look up or modify the canonical user data; authentication, credentials, and permissions live in separate modules (mod-login-keycloak, mod-permissions, etc.).
+## 1. Executive summary
 
-**Related modules:**
+This evaluation reviews selected backend-module acceptance criteria for FOLIO's `mod-users` module at version `v19.6.2`. The review used the module source code, Maven configuration, module and deployment descriptors, integration-test files, README, and automated evaluation results.
 
-* `mod-users-bl` — business-logic/join layer providing composite user information.
-* `mod-users-keycloak` — orchestrates user operations between FOLIO `mod-users` and Keycloak.
-* `mod-permissions` — maintains permission/user associations related to FOLIO users.
-* `ui-users` — FOLIO UI for searching, viewing, creating, and editing users.
-* `app-platform-minimal` — application descriptor containing `mod-users`.
-* `mod-settings` — used by current `mod-users` functionality for user settings/configuration.
+The review identified evidence supporting several criteria, while others require additional verification.
 
-**Points of contact:**
-TO BE DETERMINED.
+### Principal findings
 
-**Self-evaluation:**
-TO BE DETERMINED.
+1. **Personal-data disclosure (S005):** The automated evaluator reported a failure because `PERSONAL_DATA_DISCLOSURE.md` was not found. A similarly named file, `PERSONAL_DATA_DISCOSURE.md`, exists but has a misspelled filename. Its content also needs review for accuracy.
+2. **Runtime dependencies (S010):** The automated evaluator requires manual review. Evidence exists for PostgreSQL, Kafka, AWS-compatible object storage, and HTTP-client integrations, but runtime configuration and failure-handling coverage is incomplete.
+3. **API permissions:** The module descriptor contains permission requirements for the inspected endpoints. No confirmed permission defect was identified, but full endpoint coverage has not been established.
+4. **Reference data and integration tests:** Reference-data files and integration-test classes are present. The actual reference-data installation behavior and the official support status of the testing technology need further verification.
+5. **Tenant isolation:** The reviewed repository methods consistently pass a tenant ID to `PostgresClient`. This supports tenant-aware access but does not independently prove complete storage-layer isolation.
+6. **Health endpoint and supported technologies:** The standard health endpoint was not confirmed in the files examined, and the identified technology versions have not been compared against the official supported-technologies list.
+
+**Overall conclusion:** This is a preliminary evidence-based review, not a declaration that all acceptance criteria have passed. No additional confirmed defect should be inferred from a criterion marked for manual verification.
+
+## 2. Review scope and methodology
+
+The review covered these areas:
+
+* Automated evaluation results, including S005 and S010.
+* API permissions and module descriptor configuration.
+* Reference data and integration testing.
+* Tenant-aware database access and database schema usage.
+* Dependency documentation.
+* Tenant-specific request handling.
+* Health endpoint availability.
+* High availability considerations.
+* Infrastructure and platform technologies.
+
+Evidence was gathered by inspecting source files and configuration in the `v19.6.2` repository. Where a conclusion depended on behavior that could not be established from the inspected code, the criterion is marked for manual verification.
+
+## 3. S005 — Personal-data disclosure
+
+**Assessment: Failed by the automated evaluator; remediation recommended.**
+
+**Automated finding:** The required top-level `PERSONAL_DATA_DISCLOSURE.md` file was not found.
+
+Evidence:
+
+* [Expected disclosure filename](https://github.com/folio-org/mod-users/blob/v19.6.2/PERSONAL_DATA_DISCLOSURE.md)
+* [Existing misspelled disclosure file](https://github.com/folio-org/mod-users/blob/v19.6.2/PERSONAL_DATA_DISCOSURE.md)
+* [Module repository](https://github.com/folio-org/mod-users/tree/v19.6.2)
+
+The repository contains `PERSONAL_DATA_DISCOSURE.md`, which appears to be a misspelling of the expected filename. The existing disclosure states that no personal data is stored or processed while listing fields such as names, addresses, telephone numbers, email addresses, user identifiers, enrollment information, external IDs, and profile pictures.
+
+This apparent inconsistency needs review. The disclosure should accurately describe the personal data the module stores or processes.
+
+**Recommended actions:**
+
+1. Review the existing disclosure for completeness and accuracy.
+2. Correct the filename to `PERSONAL_DATA_DISCLOSURE.md`.
+3. Verify that the content accurately reflects the module's behavior.
+4. Rerun the automated evaluation to confirm that S005 is resolved.
+
+## 4. S010 — Runtime dependencies and configuration
+
+**Assessment: Manual review required.**
+
+The automated evaluator identified unresolved runtime-dependency and configuration scenarios involving AWS, PostgreSQL, Kafka, object storage, and HTTP clients.
+
+### Evidence reviewed
+
+* `src/main/java/org/folio/verticle/AbstractConsumersVerticle.java` initializes Kafka consumers.
+* `src/main/java/org/folio/event/service/UserOutboxService.java` handles user-event outbox operations.
+* `src/test/java/org/folio/moduserstest/UserOutboxProcessIT.java` tests Kafka event publishing and error handling.
+* `src/test/java/org/folio/moduserstest/UsersAPIIT.java` includes `canHandleDatabaseException()`, which induces a database constraint violation and expects HTTP 500.
+* `src/test/java/org/folio/service/UsersSettingsServiceTest.java` tests profile-picture configuration behavior, including invalid settings.
+* `src/main/java/org/folio/service/storage/ProfilePictureStorage.java` implements database and object-storage functionality.
+
+### Outstanding questions
+
+* Handling of missing or invalid database, Kafka, and AWS configuration has not been fully verified.
+* Dedicated tests for profile-picture storage failure scenarios were not identified during this review.
+* HTTP-client failure behavior has not been comprehensively verified.
+* Kafka consumer startup failures require further investigation. In `AbstractConsumersVerticle.java`, the completion callback for `Future.all(futures)` completes the startup promise without explicitly propagating the aggregate failure. This warrants targeted testing and review.
+
+**Finding:** The available evidence demonstrates runtime integrations and some error-handling tests, but does not establish satisfactory behavior for every required configuration and failure scenario.
+
+**Recommended action:** Retain manual-review status until the outstanding runtime scenarios have been tested or otherwise verified. The evidence collected does not, by itself, establish a confirmed S010 defect.
+
+## 5. API permissions
+
+**Assessment: Evidence supports compliance in the inspected interfaces; complete verification remains outstanding.**
+
+Evidence:
+
+* [Module descriptor](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/ModuleDescriptor-template.json)
+* [Users RAML](https://github.com/folio-org/mod-users/tree/v19.6.2/ramls)
+
+The module descriptor declares API interfaces and permission requirements for the inspected endpoints, including:
+
+* `users`
+* `custom-fields`
+* `patron-pin`
+* `user-tenants`
+* `staging-users`
+* `users.settings`
+
+The reviewed handlers generally specify individual permissions through `permissionsRequired`. Some GET user endpoints also declare `permissionsDesired`, including `users.basic-read.execute` and `users.restricted-read.execute`.
+
+The descriptor contains composite permissions such as `users.all`, `users.settings.all`, and `user-settings.custom-fields.all`. The presence of composite permissions does not itself demonstrate a violation: the inspected handlers use individual permissions rather than requiring a broad `*.all` permission for every endpoint.
+
+The DELETE user endpoint also declares module permissions associated with manual blocks.
+
+### Limitations
+
+* A complete endpoint-by-endpoint comparison against the permission naming guidelines was not performed.
+* The authorization behavior of system interfaces, including `_tenant` and `_timer`, was not independently verified.
+* The review did not establish that every endpoint is protected appropriately under all runtime conditions.
+
+**Finding:** No confirmed permission defect was identified in the inspected descriptor entries. Further verification is required before declaring full compliance.
+
+## 6. Module descriptor and deployment descriptor
+
+**Assessment: Manual review; no confirmed descriptor defect identified.**
+
+Evidence:
+
+* [ModuleDescriptor-template.json](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/ModuleDescriptor-template.json)
+* [DeploymentDescriptor-template.json](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/DeploymentDescriptor-template.json)
+* [UsersAPI.java](https://github.com/folio-org/mod-users/blob/v19.6.2/src/main/java/org/folio/rest/impl/UsersAPI.java)
+
+The module descriptor declares the module name and version, provided interfaces, API handlers, permissions, optional dependencies, and scheduled jobs.
+
+The deployment descriptor identifies the Java command used to launch the module. The reviewed `UsersAPI.java` implementation includes core user operations, profile-picture management, configuration, expiration, and outbox processing.
+
+**Finding:** The reviewed files provide evidence of alignment between the descriptor and substantial parts of the implementation. A complete endpoint-by-endpoint and permission-by-permission comparison has not been performed.
+
+## 7. Reference data
+
+**Assessment: Evidence supports compliance; installation and upgrade behavior not fully verified.**
+
+Evidence:
+
+* [Reference-data directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/main/resources/ref-data)
+* [Address-type reference data](https://github.com/folio-org/mod-users/tree/v19.6.2/src/main/resources/ref-data/addresstypes-15.4.0)
+* [User-group reference data](https://github.com/folio-org/mod-users/tree/v19.6.2/src/main/resources/ref-data/groups-17.3.0)
+* [MODUSERS-335 commit](https://github.com/folio-org/mod-users/commit/4961efbc818afc06de5dd9b198550c67a9c7aba8)
+
+The module includes these address-type reference-data files:
+
+* `claim.json`
+* `home.json`
+* `order.json`
+* `payment.json`
+* `returns.json`
+* `work.json`
+
+The user-group reference-data directory contains:
+
+* `faculty.json`
+* `graduate.json`
+* `staff.json`
+* `undergraduate.json`
+
+The associated commit, MODUSERS-335, describes changes intended to install or restore only reference or sample data that has changed during a tenant upgrade.
+
+**Finding:** Reference-data files are present and their purpose is consistent with the criterion.
+
+**Limitation:** The review did not test reference-data installation, restoration, or upgrade behavior. Full runtime compliance is therefore not independently established.
+
+## 8. Integration tests and testing technology
+
+**Assessment: Integration tests are present; official support status requires confirmation.**
+
+Evidence:
+
+* [Integration-test directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/test/java/org/folio/moduserstest)
+* [pom.xml](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml)
+
+The inspected test directory includes:
+
+* `AbstractRestTest.java`
+* `AbstractRestTestNoData.java`
+* `AbstractRestTestWithData.java`
+* `ExpirationIT.java`
+* `GroupIT.java`
+* `ProxyRelationshipsIT.java`
+* `UserOutboxProcessIT.java`
+
+The Maven configuration declares:
+
+* JUnit BOM version `6.0.3`
+* JUnit Jupiter API and Engine
+* JUnit Jupiter parameter support
+* Testcontainers JUnit Jupiter
+* Testcontainers LocalStack
+* JUnit Vintage Engine
+
+The tests use established Java testing frameworks and Testcontainers. The review also identified tests that exercise Kafka event publishing and database error handling.
+
+**Finding:** Integration tests and their supporting test dependencies are present.
+
+**Limitation:** Dependency declarations do not prove that all tests pass, and the official FOLIO support status of the testing technology has not been independently confirmed against the applicable technology list or integration-test guidance.
+
+## 9. Tenant data segregation at the storage layer
+
+**Assessment: Evidence supports tenant-aware database access; full isolation remains unverified.**
+
+Evidence:
+
+* [RecordRepositoryImpl.java](https://github.com/folio-org/mod-users/blob/v19.6.2/src/main/java/org/folio/service/impl/RecordRepositoryImpl.java)
+* [AbstractRestTest.java](https://github.com/folio-org/mod-users/blob/v19.6.2/src/test/java/org/folio/moduserstest/AbstractRestTest.java)
+
+The repository defines:
+
+```java
+private PostgresClient pgClient(String tenantId) {
+    return PostgresClient.getInstance(vertx, tenantId);
+}
+```
+
+The reviewed retrieval and update methods use `pgClient(tenantId)` for operations on the users table. For example:
+
+```java
+pgClient(tenantId).update(
+    USERS_TABLE, user, user.getId(), getAsyncResultHandler(promise)
+);
+```
+
+The integration-test setup also initializes `OkapiHeaders` with `TENANT_NAME` and obtains a PostgreSQL client for that tenant.
+
+**Finding:** The inspected methods consistently pass a tenant identifier to the database client.
+
+**Limitation:** This evidence does not independently prove the underlying client's isolation guarantees or establish that every database access path is tenant-isolated. Cross-tenant integration tests or equivalent evidence would strengthen the conclusion.
+
+## 10. Database schema access
+
+**Assessment: No violation identified in the inspected result; complete module-wide verification remains outstanding.**
+
+The repository search for `public.` identified one result:
+
+* [create_configuration_table.sql](https://github.com/folio-org/mod-users/blob/58eb337e7f89667037e88f297db8fcdd44ebdda8/src/main/resources/templates/db_scripts/create_configuration_table.sql#L4)
+
+The supplied SQL snippet includes:
+
+```sql
+new_uuid UUID := public.uuid_generate_v4();
+```
+
+and:
+
+```sql
+id uuid PRIMARY KEY DEFAULT public.uuid_generate_v4()
+```
+
+These references call the UUID-generation function in the `public` schema, which is permitted by the criterion. The shown table is named `configuration` without a different schema prefix.
+
+No `public.` matches were found in `RecordRepositoryImpl.java`.
+
+**Finding:** The reviewed evidence does not identify a cross-schema access violation.
+
+**Limitation:** Searching for the literal string `public.` is not exhaustive proof that the module never accesses other schemas. A broader review of SQL scripts, query construction, and database operations would be required for full verification.
+
+## 11. Dependency documentation in README
+
+**Assessment: Manual review required; no confirmed violation.**
+
+Evidence:
+
+* [README.md](https://github.com/folio-org/mod-users/blob/v19.6.2/README.md)
+* [Module descriptor](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/ModuleDescriptor-template.json)
+
+The module descriptor declares optional dependencies on:
+
+* `feesfines`, version `19.1`
+* `configuration`, version `2.0`
+
+The README documents profile-picture configuration through the `users.settings` interface and legacy configuration endpoints. It also describes S3-compatible object-storage configuration.
+
+However, no explicit dependency section was identified, and the README does not mention `feesfines` in the location searched. The occurrence of the word `configuration` relates to configuration documentation and does not necessarily document the separate module dependency.
+
+**Finding:** The evidence is insufficient to determine whether all dependencies outside defined interfaces are adequately documented.
+
+**Recommended action:** Verify which dependencies are covered by defined interfaces and whether any additional dependencies require explicit README documentation.
+
+## 12. Tenant-specific responses and `x-okapi-tenant`
+
+**Assessment: Evidence supports tenant-aware test setup; response behavior remains unverified.**
+
+Evidence:
+
+* [AbstractRestTest.java](https://github.com/folio-org/mod-users/blob/v19.6.2/src/test/java/org/folio/moduserstest/AbstractRestTest.java)
+
+The test setup contains:
+
+```java
+okapiHeaders = new OkapiHeaders(wireMockUrl, TENANT_NAME, token);
+postgresClient = PostgresClient.getInstance(vertx, TENANT_NAME);
+```
+
+It then passes the headers into module initialization.
+
+**Finding:** The test setup is tenant-aware and uses a tenant-specific database client.
+
+**Limitation:** The reviewed snippet does not explicitly show the outgoing `x-okapi-tenant` HTTP header or prove that requests from two different tenants return only the appropriate tenant's data.
+
+**Recommended action:** Verify request-header construction and add or inspect cross-tenant integration tests that demonstrate tenant-specific results.
+
+## 13. Standard health endpoint
+
+**Assessment: Manual verification required; endpoint not confirmed.**
+
+The search for `/admin/health` did not find a match in:
+
+* [ModuleDescriptor-template.json](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/ModuleDescriptor-template.json)
+* [AbstractRestTest.java](https://github.com/folio-org/mod-users/blob/v19.6.2/src/test/java/org/folio/moduserstest/AbstractRestTest.java)
+
+The build configuration identifies `org.folio.rest.RestLauncher` and `org.folio.rest.RestVerticle` as the application entry points. This indicates the use of shared FOLIO REST infrastructure, but does not establish that the health endpoint is present or returns HTTP 200.
+
+**Finding:** The required endpoint has not been confirmed from the evidence examined.
+
+**Recommended action:** Run a request to `GET /admin/health` against a deployed module or inspect the relevant shared REST infrastructure to verify that the endpoint exists and returns HTTP 200.
+
+## 14. High availability
+
+**Assessment: Evidence supports the reviewed storage path; full HA compliance remains unverified.**
+
+Evidence:
+
+* [ProfilePictureStorage.java](https://github.com/folio-org/mod-users/blob/v19.6.2/src/main/java/org/folio/service/storage/ProfilePictureStorage.java)
+
+The reviewed object-storage methods:
+
+* Obtain the tenant identifier from the `x-okapi-tenant` header.
+* Prefix object keys with the tenant identifier.
+* Use `FolioS3Client` to write, retrieve, and remove profile pictures.
+* Use in-memory byte streams when writing profile-picture data.
+
+No `FileOutputStream` match was found in the reviewed file.
+
+**Finding:** The reviewed object-storage implementation does not show a dependency on local filesystem persistence for profile pictures.
+
+**Limitation:** This does not establish that the entire module avoids local persistent storage, sticky sessions, connection affinity, or other HA concerns. The review also did not test concurrent operation across multiple module instances.
+
+**Recommended action:** Review the remaining storage and session-related code and, where practical, validate behavior across multiple module instances.
+
+## 15. Officially supported infrastructure and platform technologies
+
+**Assessment: Manual verification required.**
+
+Evidence:
+
+* [pom.xml](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml)
+* [ProfilePictureStorage.java](https://github.com/folio-org/mod-users/blob/v19.6.2/src/main/java/org/folio/service/storage/ProfilePictureStorage.java)
+
+The following dependencies or versions were identified:
+
+| Technology or dependency | Evidence                                                                                      |
+| ------------------------ | --------------------------------------------------------------------------------------------- |
+| Vert.x                   | `vertx-stack-depchain`, version `5.0.10`                                                      |
+| PostgreSQL testing       | `org.folio:postgres-testing`, test scope, version managed by `${raml-module-builder.version}` |
+| FOLIO Kafka wrapper      | `org.folio:folio-kafka-wrapper`, version `4.0.0`                                              |
+| Apache Kafka client      | `org.apache.kafka:kafka-clients`, version `4.2.0`                                             |
+| S3-compatible storage    | `FolioS3ClientFactory` and `FolioS3Client` used in profile-picture storage                    |
+
+A search for `aws` in `pom.xml` did not identify a matching dependency entry. This does not establish that AWS-compatible storage is absent; the relevant library may have another artifact name or be supplied transitively.
+
+**Finding:** The reviewed files identify several infrastructure technologies, but their versions have not been compared against the official FOLIO supported-technologies list.
+
+**Recommended action:** Compare the effective production dependency tree, including transitive dependencies, with the supported-technologies list applicable to this module version. Confirm whether the AWS-compatible storage integration uses an approved library and supported configuration.
+
+## 16. Consolidated status
+
+| Criterion                       | Preliminary result                                                        |
+| ------------------------------- | ------------------------------------------------------------------------- |
+| S005 — Personal-data disclosure | **Failed by automated evaluator**; correct filename and review content    |
+| S010 — Runtime dependencies     | **Manual review required**                                                |
+| API permissions                 | Evidence supports inspected endpoints; full verification outstanding      |
+| Module descriptor               | Manual review; no confirmed defect                                        |
+| Reference data                  | Evidence supports compliance; loading and upgrade behavior untested       |
+| Integration tests               | Tests and dependencies present; official support status to confirm        |
+| Tenant storage isolation        | Tenant-aware database access observed; full isolation unverified          |
+| Database schema access          | No violation identified in reviewed result; broader verification needed   |
+| Dependency documentation        | Manual review required                                                    |
+| Tenant-specific responses       | Tenant-aware setup observed; cross-tenant behavior unverified             |
+| `/admin/health`                 | Endpoint not confirmed                                                    |
+| High availability               | Reviewed storage path supports compliance; module-wide review outstanding |
+| Supported technologies          | Manual verification required                                              |
+
+These results describe the evidence collected during this review. A preliminary result of “evidence supports compliance” should not be treated as equivalent to a complete test-based verification.
+
+## 17. Recommended follow-up actions
+
+Prioritize the following work:
+
+1. **Resolve S005:** Correct the disclosure filename, verify its contents, and rerun the automated evaluator.
+2. **Complete S010 review:** Investigate configuration-absent scenarios, HTTP-client failures, object-storage failures, database failures, and Kafka consumer startup failures.
+3. **Verify `/admin/health`:** Confirm the endpoint returns HTTP 200 in a deployed environment or through the applicable shared infrastructure.
+4. **Verify tenant isolation:** Confirm the tenant header reaches database operations and inspect cross-tenant integration tests.
+5. **Verify dependency documentation:** Determine whether `feesfines` and `configuration` require explicit documentation beyond their declared interfaces.
+6. **Compare supported technologies:** Check the effective dependency tree against the official FOLIO support list.
+7. **Complete the remaining manual checks:** Confirm full API permission coverage, database schema access, reference-data upgrade behavior, and HA-related behavior.
+
+## 18. References
+
+* [FOLIO mod-users v19.6.2 source](https://github.com/folio-org/mod-users/tree/v19.6.2)
+* [FOLIO Technical Council module acceptance criteria](https://github.com/folio-org/tech-council/blob/master/MODULE_ACCEPTANCE_CRITERIA.MD)
+* [Module descriptor](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/ModuleDescriptor-template.json)
+* [Deployment descriptor](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/DeploymentDescriptor-template.json)
+* [Maven configuration](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml)
+* [README](https://github.com/folio-org/mod-users/blob/v19.6.2/README.md)
+* [Existing personal-data disclosure](https://github.com/folio-org/mod-users/blob/v19.6.2/PERSONAL_DATA_DISCOSURE.md)
+* [Reference-data directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/main/resources/ref-data)
+* [Integration-test directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/test/java/org/folio/moduserstest)
 
 ---
 
-# Values and Criteria Evaluation
-
-## Administrative
-
-### Listed by the Product Council with a positive evaluation result
-
-**Status:** INAPPLICABLE
-
-**Comment:**
-This is an existing-module evaluation. The acceptance criteria specify that this criterion is inapplicable for existing module evaluation.
-
----
-
-# Shared/Common
-
-### Uses Apache 2.0 license
-
-**Status:** ACCEPTABLE
-
-**Evidence:**
-The `mod-users` repository identifies the software as being distributed under the Apache License, Version 2.0 and includes a LICENSE file.
-
-**Comment:**
-The repository states that `mod-users` is licensed under Apache 2.0.
-
----
-
-### Module build must produce a valid module descriptor
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* `descriptors/` contents
-* generated `target/ModuleDescriptor.json`
-* successful Maven build
-* module descriptor validation
-
-**Comment:**
-The repository documents the module descriptor and identifies `target/ModuleDescriptor.json` as the built descriptor. The actual descriptor should be generated and inspected for this evaluation.
-
----
-
-### Third-party dependencies comply with ASF 3rd Party License Policy
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* `pom.xml`
-* dependency tree
-* FOLIO Module Evaluator results
-* identification of any LGPL or other restricted dependencies
-
-**Comment:**
-The acceptance criteria specifically identify third-party dependency licensing as an evaluation requirement. This requires an actual dependency evaluation rather than inference from the repository license.
-
----
-
-### Installation documentation is included
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* README installation/configuration instructions
-* Module Descriptor
-* environment-variable documentation
-
-**Comment:**
-The repository contains a README with configuration information, including profile-picture configuration. The completeness of installation documentation needs to be evaluated.
-
----
-
-### Personal data form is completed and accurate
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* `PERSONAL_DATA_DISCLOSURE.md`
-
-**Comment:**
-Confirm that the file exists, is complete, and accurately describes the personal data handled by `mod-users`.
-
----
-
-### Sensitive and environment-specific information is not checked into git
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* repository search for credentials/secrets
-* configuration files
-* example configuration
-* source code
-* Git history where appropriate
-
-**Comment:**
-This criterion should receive particular attention because `mod-users` handles personal user data and includes profile-picture functionality.
-
----
-
-### No default passwords, access keys, private keys, or other credentials
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* repository-wide secret scan
-* configuration files
-* tests
-* environment-variable documentation
-
-**Comment:**
-Profile-picture configuration includes an encryption-key setting. Verify that the repository does not provide an operational default credential or secret.
-
----
-
-### Uses officially supported language/framework
-
-**Status:** TO BE DETERMINED
-
-**Evidence:**
-The repository currently identifies Java 21 as a prerequisite and uses the raml-module-builder framework.
-
-**Comment:**
-The official supported-technologies list should be checked to confirm that the Java/framework combination used by the evaluated version is supported.
-
----
-
-### Uses FOLIO interfaces provided by previously accepted modules
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* `descriptors/ModuleDescriptor.json`
-* required and optional interfaces
-* related module evaluations
-
-**Comment:**
-The module descriptor needs to be compared with the accepted FOLIO interfaces available to the application.
-
----
-
-### Does not depend on an unapproved FOLIO library
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* `pom.xml`
-* dependency tree
-* FOLIO Module Evaluator results
-
----
-
-### Gracefully handles absence of optional third-party systems/configuration
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* Module Descriptor environment configuration
-* README
-* startup behavior
-* optional profile-picture/object-storage configuration
-* tests
-
-**Comment:**
-The profile-picture functionality can use database storage or object storage. Verify that optional infrastructure is handled according to FOLIO policy.
-
----
-
-### SonarQube has no security/high-severity issues or excessive duplication
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* SonarQube report for the evaluated version/commit
-* security issues
-* reliability issues
-* duplication percentage
-* suppressed/disabled rules
-
-**Comment:**
-This cannot be established from the repository README alone.
-
----
-
-### Uses officially supported build tools
-
-**Status:** TO BE DETERMINED
-
-**Evidence:**
-The repository currently identifies Maven as the build tool and Java 21 as a prerequisite.
-
-**Comment:**
-Confirm against the current officially supported technologies list.
-
----
-
-### Unit tests have at least 80% coverage
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* Maven test results
-* JaCoCo/coverage report or equivalent
-* CI results
-
-**Comment:**
-The acceptance criterion requires at least 80% unit-test coverage.
-
----
-
-### Assigned to exactly one application descriptor
-
-**Status:** TO BE DETERMINED
-
-**Evidence:**
-TCR-88 identifies `app-platform-minimal` as the application.
-
-**Comment:**
-The acceptance criteria require searching the FOLIO GitHub organization to determine whether the module appears in exactly one applicable Community LSP application descriptor. The current `app-platform-minimal` template includes `mod-users`. A broader organization-wide search is still required.
-
----
-
-# Backend
-
-### Repository includes a compliant Module Descriptor
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* `descriptors/`
-* generated `ModuleDescriptor.json`
-
----
-
-### Every consumed API is declared in `requires` or `optional`
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-Compare actual API/interface usage in source code with the Module Descriptor.
-
----
-
-### All endpoints in the Module Descriptor have executable implementations
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-Compare `provides` interfaces/endpoints in the Module Descriptor against the implementation and RAML definitions.
-
----
-
-### Environment variables comply with FOLIO policy
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* Module Descriptor environment-variable definitions
-* README
-* startup configuration
-* source code
-
-Verify required/optional classification, naming, startup behavior, and sensitive-value logging.
-
----
-
-### Provided interfaces are correctly declared and named
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-Module Descriptor `provides` section and FOLIO interface naming conventions.
-
----
-
-### All API endpoints are documented
-
-**Status:** ACCEPTABLE / TO BE CONFIRMED
-
-**Evidence:**
-The repository contains RAML API definitions, including `ramls/users.raml`. The current acceptance criteria specifically allow existing RMB-based modules to continue using RAML rather than OpenAPI.
-
-**Comment:**
-The repository documents the Users API using RAML. Final verification should compare the RAML definitions with the actual Module Descriptor endpoints.
-
----
-
-### API endpoints are protected with appropriate permissions
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* permission definitions
-* RAML
-* Module Descriptor
-* source code
-* tests
-
-**Comment:**
-This is a particularly important criterion for `mod-users`, because the module manages canonical user records. Verify that read, create, update, delete, configuration, and other sensitive operations have appropriately scoped permissions and do not rely unnecessarily on broad `*.all` permissions.
-
----
-
-### Reference data is provided where applicable
-
-**Status:** TO BE DETERMINED / POSSIBLY INAPPLICABLE
-
-**Comment:**
-Determine whether `mod-users` has any required controlled vocabulary/reference data that must be initialized by the module.
-
----
-
-### Integration/API tests use supported technology
-
-**Status:** TO BE DETERMINED
-
-**Comment:**
-Integration tests are recommended but not mandatory. If provided, verify that they use an officially supported technology.
-
----
-
-### Data is segregated by tenant at the storage layer
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* database schema definitions
-* RMB configuration
-* tenant initialization
-* integration tests
-* multi-tenant testing
-
-**Comment:**
-This is a critical criterion for `mod-users`. Verify that user data is physically/logically isolated by tenant at the storage layer.
-
----
-
-### Module does not access another module's private database schema
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* SQL/database access code
-* schema definitions
-* database scripts
-* source-code search for cross-module schemas
-
-**Comment:**
-The module should access its own database schema and public/shared schemas only, except where FOLIO Query Machine rules apply.
-
----
-
-### Dependencies other than defined interfaces are documented
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* README
-* Module Descriptor
-* source code
-* deployment documentation
-
----
-
-### Responds with tenant content based on `x-okapi-tenant`
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* request handling code
-* tenant initialization
-* database access
-* multi-tenant integration tests
-
-**Comment:**
-Verify both normal reads/writes and error conditions.
-
----
-
-### Standard `GET /admin/health` returns HTTP 200
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* endpoint implementation
-* Module Descriptor
-* integration test
-* running module test
-
----
-
-### High Availability compliant
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* application state
-* database access
-* local filesystem usage
-* caching
-* session/state management
-* deployment configuration
-
-**Comment:**
-Check specifically for sticky-session requirements, local persistent state, stateful services, and local container storage.
-
----
-
-### Uses only officially supported infrastructure/platform technologies
-
-**Status:** TO BE DETERMINED
-
-**Evidence to collect:**
-
-* PostgreSQL/database usage
-* Kafka usage
-* S3/object storage
-* other external infrastructure
-* supported-technologies list
-
----
-
-# Preliminary observations
-
-The following relationships should be considered during the evaluation:
-
-* `mod-users` is the central user-data module.
-* `mod-users-bl` is a business-logic/join module that provides composite user information and describes itself as a front end for `mod-users` and `mod-permissions`.
-* `mod-users-keycloak` coordinates user operations between `mod-users` and Keycloak and specifically warns that direct modification of certain users through `mod-users` can create inconsistencies with Keycloak.
-* `mod-permissions` maintains its own permission/user associations and refers to the FOLIO user ID from `mod-users`.
-* `app-platform-minimal` currently includes `mod-users` as one of its backend modules.
-
-These relationships should be documented rather than treating `mod-users` as an isolated component.
-
-# Evaluation status
-
-This is a **working evaluation draft**. Criteria marked `TO BE DETERMINED` require additional evidence before an ACCEPTABLE or UNACCEPTABLE status can be assigned.
-
-The evaluation should not be considered complete until:
-
-1. TCR-88 identifies/accepts the exact source tag or commit.
-2. The self-evaluation is available.
-3. The Module Descriptor is inspected.
-4. Dependency/license analysis is performed.
-5. Test coverage is verified.
-6. SonarQube results are verified.
-7. Permissions are reviewed.
-8. Tenant isolation is verified.
-9. Application-descriptor membership is verified.
-10. Health and HA behavior are verified.
+**Review status:** Preliminary evaluation prepared; targeted remediation and manual verification remain outstanding.
 
