@@ -545,118 +545,27 @@ Dependency declarations alone do not establish that the technologies are
 officially supported or that the deployed runtime uses the expected
 versions.
 Status: Manual verification required.
-17. Consolidated status
-  Criterion                           Preliminary result
-  S005 --- Personal-data disclosure   Manual review required. The
-                                      evaluator found and parsed
-                                      PERSONAL_DATA_DISCLOSURE.md, but
-                                      skipped semantic review because
-                                      agent review was disabled or
-                                      unconfigured. The disclosure
-                                      content still requires human
-                                      review.
-  S010 --- Runtime dependencies       Manual review required.
-                                      Inspected database and Kafka write
-                                      paths propagate failures through
-                                      asynchronous futures. HTTP response
-                                      handling and selected
-                                      object-storage error paths were
-                                      also reviewed. Remaining questions
-                                      include behavior when configuration
-                                      is absent or invalid,
-                                      object-storage error
-                                      classification, Kafka-disabled
-                                      outbox processing, producer cleanup
-                                      failures, and runtime failure
-                                      handling across unreviewed paths.
-  API permissions                     Permission declarations and
-                                      selected endpoint mappings were
-                                      inspected; complete authorization
-                                      and field-level protection remain
-                                      unverified.
-  API endpoint documentation          Preliminary; final endpoint
-                                      coverage check outstanding. RAML
-                                      documentation was found for the
-                                      principal mod-users API
-                                      resources. The separate
-                                      folio-custom-fields repository
-                                      documents collection and item
-                                      operations and both
-                                      usage-statistics endpoints.
-                                      Documentation for /_/tenant and
-                                      /_/tenant/{id} was not confirmed,
-                                      and a complete
-                                      descriptor-to-documentation
-                                      comparison remains outstanding.
-  Module descriptor                   Manual review required. The
-                                      inspected descriptor and
-                                      implementation provide evidence of
-                                      alignment; a complete
-                                      endpoint-by-endpoint comparison has
-                                      not been performed.
-  Reference data                      Version-aware reference-data
-                                      loading is supported by the
-                                      inspected implementation; actual
-                                      installation, upgrade, and
-                                      preservation of tenant-customized
-                                      records remain untested.
-  Integration tests                   Integration-test classes and
-                                      supporting dependencies are
-                                      present. Complete test execution
-                                      results and official technology
-                                      support status remain unverified.
-  Tenant isolation                    Manual review required.
-                                      Inspected code selects
-                                      tenant-specific PostgreSQL clients
-                                      in RecordRepositoryImpl.java,
-                                      UserOutboxService.java, and
-                                      ProfilePictureStorage.java. Test
-                                      setup uses the same tenant (diku)
-                                      for Okapi headers and the
-                                      PostgreSQL client. Cross-tenant
-                                      isolation remains unverified; no
-                                      violation has been established.
-  Database schema access              No violation was identified in the
-                                      inspected results; broader
-                                      verification of SQL scripts and
-                                      database operations remains
-                                      outstanding.
-  Dependency documentation            Manual review required. The
-                                      descriptor lists feesfines and
-                                      configuration as optional
-                                      dependencies. The reviewed README
-                                      content does not explicitly explain
-                                      feesfines. Applicable
-                                      documentation requirements have not
-                                      been fully determined, so no
-                                      violation has been established.
-  Tenant-specific responses           Tenant-aware test setup was
-                                      observed; request-header behavior
-                                      and cross-tenant response isolation
-                                      remain unverified.
-  /admin/health                     The InstallUpgradeIT.java
-                                      integration test verifies that GET
-                                      /admin/health returns HTTP 200
-                                      and body "OK". Successful
-                                      execution of the test remains
-                                      unverified.
-  High availability                   The reviewed profile-picture
-                                      storage path uses object storage;
-                                      module-wide high-availability
-                                      behavior remains unverified.
-  Supported technologies              Manual verification required.
-                                      pom.xml specifies Java 21, which
-                                      aligns with the cited FOLIO
-                                      Trillium backend technology
-                                      guidance. Compliance of all
-                                      relevant production and transitive
-                                  dependencies remains unverified.
-These results summarize the evidence collected during the review. They
-are preliminary assessments, not declarations of complete compliance.
-Evidence that supports compliance in one area should not be interpreted
-as complete verification through testing or exhaustive source review.
-Items marked unverified or requiring manual review should remain open
-until sufficient evidence is collected.
+## 17. Consolidated status
+
+| Criterion | Preliminary result |
+|---|---|
+| S005 — Personal-data disclosure | Manual review required. The evaluator found and parsed `PERSONAL_DATA_DISCLOSURE.md`, but skipped semantic review. The disclosure's accuracy and completeness remain unverified. |
+| S010 — Runtime dependencies | Manual review required. Several inspected database and Kafka write paths propagate failures. Configuration, object-storage errors, Kafka-disabled outbox processing, producer cleanup, and other failure paths need further review. |
+| API permissions | Manual review required. Permission declarations and selected endpoint mappings were inspected. Complete authorization and field-level protection remain unverified. |
+| API endpoint documentation | Preliminary; final coverage check outstanding. RAML documentation exists for the principal `mod-users` resources and the shared `folio-custom-fields` interface. Documentation for `/_/tenant` and `/_/tenant/{id}` has not been confirmed. |
+| Module descriptor and deployment descriptor | Manual review required. The inspected descriptor and implementation show evidence of alignment, but a complete endpoint-by-endpoint comparison has not been performed. |
+| Reference data | Further verification required. The inspected implementation supports version-aware loading. Actual installation, upgrade, and preservation of tenant-customized records remain unverified. |
+| Integration tests and testing technology | Further verification required. Integration-test classes and dependencies are present. Successful execution of the full test suite and official technology support remain unverified. |
+| Tenant data segregation | Manual review required. Inspected code selects tenant-specific PostgreSQL clients. Cross-tenant isolation has not been demonstrated; no violation has been established. |
+| Database schema access | No violation identified in the inspected evidence. Broader verification of SQL scripts and database operations remains outstanding. |
+| Dependency documentation | Manual review required. The descriptor lists `feesfines` and `configuration` as optional dependencies. Applicable documentation requirements need clarification. |
+| Tenant-specific responses and `x-okapi-tenant` | Further verification required. Tenant-aware test setup was observed, but outgoing request-header behavior and cross-tenant response isolation remain unverified. |
+| `/admin/health` | Test coverage identified. `InstallUpgradeIT.java` asserts HTTP 200 and body `OK`; successful execution remains unverified. |
+| High availability | Further verification required. The reviewed profile-picture storage path uses object storage, but module-wide high-availability behavior remains unverified. |
+| Supported infrastructure and platform technologies | Manual verification required. Java 21 aligns with the cited FOLIO Trillium guidance. Compliance of all relevant production and transitive dependencies remains unverified. |
+
+These results summarize the evidence collected during the review. They are preliminary assessments, not declarations of complete compliance. Items marked unverified or requiring manual review should remain open until sufficient evidence has been collected.
+
 18. Recommended follow-up actions
 Prioritize the remaining work as follows:
 1. S005 --- Personal-data disclosure: Manually review
