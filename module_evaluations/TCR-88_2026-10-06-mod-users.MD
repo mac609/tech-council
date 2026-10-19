@@ -50,27 +50,36 @@ Evidence was collected by inspecting the relevant source files and configuration
 
 ## 3. S005 — Personal-data disclosure
 
-**Assessment:** Manual review required; semantic compliance has not been verified.
+**Current status: Manual review required**
 
-**Evidence**
+The automated evaluation found the personal-data disclosure file, but the semantic review was skipped. The disclosure therefore has not been fully verified.
 
-The automated evaluator found and parsed `PERSONAL_DATA_DISCLOSURE.md` after the filename was corrected. The latest reported evaluator run showed 31 criteria, 5 passed, 0 failed, and 26 requiring manual review.
+**Disclosure selections reviewed**
 
-The evaluator output states that semantic review was skipped because agent review was disabled or unconfigured.
+The disclosure indicates that the module:
+- Provides custom fields.
+- Transmits personal data, including through queues and additional databases.
+- Transmits free-form text fields.
 
-Finding and parsing the file establishes that the required artifact is present and readable. It does not establish that the disclosure accurately describes all relevant personal-data collection, processing, storage, transmission, sharing, and retention.
+The options stating that the module does not store personal data, does not process personal data, caches personal data, and logs personal data are unchecked.
 
-The disclosure indicates that the module provides custom fields and identifies categories of personal information. Those selections should be compared with the implementation and actual data flows. User-event code and other paths that transmit user information deserve particular attention.
+**Evidence reviewed**
 
-**Finding**
+The `UserEventProducer` code sends user-created, user-deleted, and user-updated events to Kafka. The `UsersService.getConsortiumUserDto` method builds an event record containing user ID, username, barcode, external system ID, first and last name, email, phone, mobile phone, account status, and user type.
 
-The disclosure artifact is present and parseable, but its substantive accuracy and completeness have not been verified.
+This evidence supports the disclosure’s statement that the module transmits personal data.
 
-**Recommended action**
+**Items requiring further verification**
 
-Compare `PERSONAL_DATA_DISCLOSURE.md` with the implementation and relevant data flows. Confirm that the selected data categories and statements about storage, processing, transmission, and other handling practices are accurate before marking S005 as satisfied.
+- Confirm whether the disclosure accurately describes all personal-data categories handled by the module.
+- Confirm whether other data flows transmit free-form text or custom-field values. The event-building method reviewed does not visibly include these fields, but other data flows have not been fully examined.
+- Confirm that the unchecked caching and logging options accurately reflect the module’s behavior.
+- Confirm that the disclosure is complete and accurate for the reviewed module version, `v19.6.2`.
 
-**Status:** Manual review required.
+**Conclusion**
+
+The review provides evidence supporting the disclosure’s statement that the module transmits personal data. However, the disclosure’s overall accuracy and completeness remain unverified. S005 should remain subject to manual review until the outstanding questions are resolved.
+
 
 ## 4. S010 — Runtime dependencies and configuration
 
