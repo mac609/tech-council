@@ -364,26 +364,31 @@ No explicit test using two different tenants to verify cross-tenant isolation wa
 - Where practical, add or run tests using two distinct tenant IDs to verify that one tenant cannot access another tenant's data.
 
 **Status:** Manual review required.
-11. Database schema access
-Assessment: No violation identified in the inspected results; complete
-module-wide verification remains outstanding.
-The repository search for the literal string public. returned one
-result in create_configuration_table.sql. The inspected SQL includes:
-new_uuid UUID := public.uuid_generate_v4();
-and:
-id uuid PRIMARY KEY DEFAULT public.uuid_generate_v4()
-These references invoke the UUID-generation function in the public
-schema, which is permitted by the criterion. The shown table is named
-configuration without a different schema prefix. The search found no
-public. matches in RecordRepositoryImpl.java.
-Finding and limitation
-The inspected evidence does not identify a cross-schema access
-violation. Searching for the literal string public. does not
-exhaustively establish that the module avoids prohibited cross-schema
-access. SQL scripts, dynamically constructed queries, and other database
-operations have not been comprehensively reviewed.
-Status: No violation identified in the inspected results; further
-verification required.
+
+## 11. Database schema access
+
+**Assessment:** No violation identified in the inspected evidence; broader verification remains outstanding.
+
+**Evidence**
+
+A search for the literal text `public.` found one result in `create_configuration_table.sql`. The result references `public.uuid_generate_v4()` in a function or default-value expression.
+
+The inspected table definition uses the `configuration` table without a different schema prefix.
+
+A search of `RecordRepositoryImpl.java` did not identify any `public.` matches.
+
+**Finding**
+
+The limited searches did not identify evidence of an application table being accessed through an unintended schema. However, these searches do not establish that every SQL script and database access path follows the applicable schema requirements.
+
+**Recommended action**
+
+- Review the remaining SQL scripts and database access paths.
+- Confirm that schema references follow the applicable FOLIO database requirements.
+- Investigate any additional schema-qualified table references found during the broader review.
+
+**Status:** No violation identified in the inspected evidence; further verification required.
+
 12. Dependency documentation
 Assessment: Manual review required.
 The module descriptor identifies feesfines and configuration as
