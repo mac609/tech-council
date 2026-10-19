@@ -124,56 +124,49 @@ The inspected paths provide evidence of explicit failure propagation for databas
 
 **Status:** Manual review required.
 
-5. API permissions
-Assessment: Manual review required.
-Evidence
-descriptors/ModuleDescriptor-template.json defines permission sets and
-API handler mappings through permissionsRequired,
-permissionsDesired, and, for selected handlers, modulePermissions.
-The inspected handler mappings cover:
-- User records: collection and item reads, creation, updates, and
-  deletion.
-- Profile pictures: GET, POST, PUT, and DELETE operations.
-- User groups, address types, proxy relationships, and departments:
-  collection and item operations.
-- Custom fields: collection and item operations, statistics, and
-  option statistics.
-- Patron PINs: creation, deletion, and verification.
-- User settings: collection and item reads, creation, updates, and
-  deletion.
-The inspected permissionsRequired entries correspond to permission
-names declared in permissionSets for the operations reviewed. The
-composite permission users.all groups permissions for user records and
-related interfaces, including user groups, address types, proxies,
-departments, patron PINs, tenant affiliations, profile pictures, and
-user settings. The composite permission
-user-settings.custom-fields.all groups eight custom-field permissions.
-The /users and /users/{id} handlers declare
-users.basic-read.execute and users.restricted-read.execute under
-permissionsDesired, while requiring their respective collection or
-item permissions. The distinction between endpoint access and
-restricted-field access needs further review.
-The user-delete handler additionally declares
-manualblocks.collection.get and manualblocks.item.delete under
-modulePermissions. The RAML validate trait includes a 422
-validation-error response; that trait does not itself establish
-authorization enforcement.
-Outstanding review items
-- Verify runtime enforcement of declared permissions.
-- Determine how basic-read and restricted-read permissions control
-  access to user fields.
-- Confirm completeness and consistency of permission declarations
-  across handlers, including the occurrences of permissionsRequired.
-- Review the purpose and enforcement of additional
-  modulePermissions.
-- Confirm the intended scope of the users.all and
-  user-settings.custom-fields.all composite permissions.
-Finding
-The inspected descriptor provides evidence of explicit API permission
-mappings and consistency between selected handler requirements and
-permission declarations. Descriptor declarations alone do not establish
-correct runtime authorization or field-level protection.
-Status: Manual review required.
+## 5. API permissions
+
+**Assessment:** Manual review required.
+
+**Evidence**
+
+The inspected `descriptors/ModuleDescriptor-template.json` defines permission sets and API handler mappings through `permissionsRequired`, `permissionsDesired`, and selected `modulePermissions` entries.
+
+The inspected mappings cover:
+
+- User records
+- Profile pictures
+- User groups, address types, proxies, and departments
+- Custom fields, including statistics
+- Patron PINs
+- User settings
+
+The reviewed `permissionsRequired` entries correspond to permission names declared in `permissionSets`.
+
+The composite permission `users.all` includes permissions for user records and related interfaces, including groups, address types, proxies, departments, patron PINs, tenant affiliations, profile pictures, and user settings.
+
+The composite permission `user-settings.custom-fields.all` groups eight custom-field permissions.
+
+The `/users` and `/users/{id}` handlers declare `users.basic-read.execute` and `users.restricted-read.execute` under `permissionsDesired`, alongside the permissions required for collection and individual-item operations. The presence of these declarations does not, by itself, confirm how basic and restricted field-level access is enforced at runtime.
+
+The user-delete handler also declares `manualblocks.collection.get` and `manualblocks.item.delete` in `modulePermissions`. The purpose and runtime enforcement of these entries require further review.
+
+The RAML validation trait includes a `422` response for validation errors. This documents validation behavior, but does not establish that authorization is correctly enforced.
+
+**Finding**
+
+Permission declarations and selected endpoint mappings were inspected. Complete authorization behavior, field-level protection, and the completeness and purpose of all permission mappings have not been verified.
+
+**Recommended action**
+
+- Verify that permissions are enforced at runtime for the relevant endpoints.
+- Confirm how basic and restricted read permissions control access to user fields.
+- Check that all declared endpoints have appropriate permission mappings.
+- Verify the purpose and enforcement of the `modulePermissions` entries.
+- Confirm that composite permissions include the intended permissions and scope.
+
+**Status:** Manual review required.
+
 6. API endpoint documentation
 Assessment: Preliminary evidence supports RAML documentation for the
 principal API resources; complete endpoint coverage remains to be
