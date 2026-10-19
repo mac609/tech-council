@@ -297,32 +297,44 @@ The inspected implementation provides evidence that reference-data loading consi
 
 **Status:** Manual review required.
 
-9. Integration tests and testing technology
-Assessment: Integration tests are present; official support status and
-test execution results require confirmation.
-Evidence
-The inspected integration-test directory includes:
-- AbstractRestTest.java
-- AbstractRestTestNoData.java
-- AbstractRestTestWithData.java
-- ExpirationIT.java
-- GroupIT.java
-- ProxyRelationshipsIT.java
-- UserOutboxProcessIT.java
-The Maven configuration declares JUnit BOM version 6.0.3, JUnit
-Jupiter API and Engine, JUnit Jupiter parameter support, Testcontainers
-JUnit Jupiter, Testcontainers LocalStack, and JUnit Vintage Engine.
-UserOutboxProcessIT exercises successful Kafka user-event processing
-and a nonexistent-tenant error scenario.
-Finding and limitation
-Integration-test classes and their supporting dependencies are present.
-The inspected outbox integration test provides evidence of testing a
-successful event-processing scenario and an error scenario. The presence
-of test classes and dependency declarations does not establish that the
-complete test suite passes. The official FOLIO support status of the
-testing technologies has not been independently confirmed against the
-applicable technology list or testing guidance.
-Status: Further verification required.
+## 9. Integration tests and testing technology
+
+**Assessment:** Further verification required.
+
+**Evidence**
+
+The review identified the following integration-test classes:
+
+- `AbstractRestTest.java`
+- `AbstractRestTestNoData.java`
+- `AbstractRestTestWithData.java`
+- `ExpirationIT.java`
+- `GroupIT.java`
+- `ProxyRelationshipsIT.java`
+- `UserOutboxProcessIT.java`
+
+The Maven configuration declares the following testing dependencies:
+
+- JUnit BOM `6.0.3`
+- JUnit Jupiter API, Engine, and Params
+- Testcontainers JUnit Jupiter
+- Testcontainers LocalStack
+- JUnit Vintage Engine
+
+`UserOutboxProcessIT.java` includes tests for successful Kafka user-event processing and an error involving a nonexistent tenant.
+
+**Finding**
+
+Integration-test classes and testing dependencies are present. Their presence does not establish that the tests pass or that the testing technologies meet the applicable official support requirements. Successful execution of the relevant test suite has not been verified.
+
+**Recommended action**
+
+- Confirm whether the relevant integration-test suite passes in the intended environment.
+- Review test failures, if any, and determine whether they affect the evaluation.
+- Verify that the testing technologies and versions meet the applicable FOLIO support requirements.
+
+**Status:** Further verification required.
+
 10. Tenant data segregation at the storage layer
 Assessment: Manual review required. The inspected code selects
 tenant-specific PostgreSQL clients in RecordRepositoryImpl.java,
