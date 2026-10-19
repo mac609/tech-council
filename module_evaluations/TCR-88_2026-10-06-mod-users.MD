@@ -437,17 +437,27 @@ The inspected test setup uses tenant-specific information, but outgoing request-
 
 **Status:** Further verification required.
 
-14. /admin/health endpoint
-Assessment: Test evidence identified; execution status unverified.
-src/test/java/org/folio/rest/InstallUpgradeIT.java
-contains a health() integration test that sends a GET request to
-/admin/health and asserts HTTP status 200 and response body "OK".
-Finding
-The test explicitly verifies the required endpoint and expected
-response. The available evidence does not establish whether this test
-was successfully executed in the evaluated version.
-Status: The endpoint requirement is covered by an integration test;
-successful execution remains unverified.
+## 14. `/admin/health` endpoint
+
+**Assessment:** Test coverage identified; successful execution remains unverified.
+
+**Evidence**
+
+The integration test `src/test/java/org/folio/rest/InstallUpgradeIT.java` contains a health-check test that sends a GET request to `/admin/health`.
+
+The test expects an HTTP `200` response and a response body containing `OK`.
+
+**Finding**
+
+The test provides evidence that the module has integration-test coverage for the `/admin/health` endpoint. The available evidence does not establish that the test has passed or that the endpoint has been verified in a deployed environment.
+
+**Recommended action**
+
+- Confirm that the health-check integration test passes in the applicable test environment.
+- If needed, verify that `/admin/health` returns the expected response in a deployed environment.
+
+**Status:** Test coverage identified; successful execution remains unverified.
+
 15. High availability
 Assessment: Evidence supports the reviewed storage path; full
 high-availability compliance remains unverified.
