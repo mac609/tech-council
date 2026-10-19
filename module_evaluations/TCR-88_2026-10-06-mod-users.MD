@@ -257,32 +257,46 @@ The inspected descriptors and implementation provide evidence of alignment betwe
 
 **Status:** Manual review required.
 
-8. Reference data
-Assessment: Evidence supports version-aware loading; installation and
-upgrade behavior are not fully verified.
-Evidence
-The module includes address-type reference-data files (claim.json,
-home.json, order.json, payment.json, returns.json, and
-work.json) and user-group reference-data files (faculty.json,
-graduate.json, staff.json, and undergraduate.json).
-In TenantRefAPI.loadData(), reference data is added to the
-tenant-loading process conditionally, using isNew() to evaluate
-feature versions. Address types are associated with version 15.4.0,
-and user groups with version 17.3.0. The method separately configures
-sample-data loading. The isNew() helper treats a null moduleFrom as
-a new installation and otherwise delegates version comparison to
-Versioned.isNewForThisInstall().
-The MODUSERS-335 commit describes changes intended to ensure that during
-a tenant upgrade, only reference or sample data that has changed is
-installed or restored.
-Finding and limitation
-The reference-data files and TenantRefAPI implementation provide
-evidence of version-aware, conditional reference-data loading. The
-underlying TenantLoading behavior and actual installation or upgrade
-results have not been independently verified. This review does not
-establish that tenant-customized records are always preserved or that
-every upgrade scenario behaves correctly.
-Status: Further verification required.
+## 8. Reference data
+
+**Assessment:** Manual review required.
+
+**Evidence**
+
+The inspected reference-data files define the following address types:
+
+- Claim
+- Home
+- Order
+- Payment
+- Returns
+- Work
+
+The user groups include:
+
+- Faculty
+- Graduate
+- Staff
+- Undergraduate
+
+`TenantRefAPI.loadData()` conditionally loads reference data using the `isNew()` check. The address types data is associated with version `15.4.0`, and the groups data is associated with version `17.3.0`.
+
+The `isNew()` logic treats a null `moduleFrom` value as a new installation. Otherwise, it uses `Versioned.isNewForThisInstall()` to determine whether the data should be loaded for the current installation or upgrade.
+
+The `MODUSERS-335` change was intended to prevent unchanged reference or sample data from being restored during tenant upgrades.
+
+**Finding**
+
+The inspected implementation provides evidence that reference-data loading considers installation and version information. The actual behavior during installation and upgrades has not been verified, including whether tenant-customized records are preserved.
+
+**Recommended action**
+
+- Verify reference-data loading during a new tenant installation.
+- Verify behavior during upgrades between module versions.
+- Confirm that tenant-customized reference records are not overwritten or restored unexpectedly.
+
+**Status:** Manual review required.
+
 9. Integration tests and testing technology
 Assessment: Integration tests are present; official support status and
 test execution results require confirmation.
