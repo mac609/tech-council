@@ -526,7 +526,7 @@ The declared Java version aligns with the cited FOLIO Trillium guidance. The ava
 
 | Criterion | Preliminary result |
 |---|---|
-| S005 — Personal-data disclosure | Manual review required | The disclosure file was found after the filename correction. Code review confirmed that user-related personal data is transmitted to Kafka. The disclosure’s overall accuracy and completeness, including free-form text, caching, and logging, remain unverified. |
+| S005 — Personal-data disclosure | Manual review required. The disclosure file was found after the filename correction. Code review confirmed that user-related personal data is transmitted to Kafka. The disclosure's overall accuracy and completeness, including free-form text, caching, and logging, remain unverified. |
 | S010 — Runtime dependencies | Manual review required. Several inspected database and Kafka write paths propagate failures. Configuration, object-storage errors, Kafka-disabled outbox processing, producer cleanup, and other failure paths need further review. |
 | API permissions | Manual review required. Permission declarations and selected endpoint mappings were inspected. Complete authorization and field-level protection remain unverified. |
 | API endpoint documentation | Preliminary; final coverage check outstanding. RAML documentation exists for the principal `mod-users` resources and the shared `folio-custom-fields` interface. Documentation for `/_/tenant` and `/_/tenant/{id}` has not been confirmed. |
