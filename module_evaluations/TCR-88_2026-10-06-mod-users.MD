@@ -72,75 +72,58 @@ Compare `PERSONAL_DATA_DISCLOSURE.md` with the implementation and relevant data 
 
 **Status:** Manual review required.
 
-4. S010 --- Runtime dependencies and configuration
-Assessment: Manual review required. The inspected code demonstrates
-explicit failure propagation in several database and Kafka write paths.
-Runtime behavior is not fully verified for all dependencies and
-configuration states.
-Evidence reviewed
-1. Configuration declarations:
-   descriptors/ModuleDescriptor-template.json declares configuration
-   inputs for database connectivity, Kafka, and object storage. The
-   descriptor alone does not establish which settings are mandatory at
-   runtime or what happens when settings are missing or invalid.
-2. HTTP client behavior: HttpClientFactory.java creates and
-   caches a VertxOkapiHttpClient per Vert.x instance.
-   VertxOkapiHttpClient.java applies explicit timeouts to several
-   request methods and converts responses to the wrapper's response
-   model. Failure behavior across all HTTP operations has not been
-   fully verified.
-3. HTTP response handling: ResponseInterpreter.java converts
-   unsuccessful HTTP responses into HttpException failures.
-   FeesFinesModuleClientImpl.java logs and propagates failures in the
-   inspected operations.
-4. Database failures: RecordRepositoryImpl.java uses
-   getAsyncResultHandler for inspected read and update operations.
-   ResultHandlerUtils.java completes a promise successfully when an
-   asynchronous operation succeeds and fails it with the original cause
-   when the operation fails. This supports failure propagation in the
-   reviewed repository paths, but does not establish how every database
-   failure is ultimately returned to API callers.
-5. Object-storage failures: ProfilePictureStorage.java catches
-   exceptions in inspected object-storage operations and translates
-   them into API responses. Some caught failures, including failures
-   retrieving a presigned URL or fetching an image, can be returned as
-   404. Further review is needed to determine whether storage outages
-   and other infrastructure failures are classified appropriately and
-   whether timeout behavior is suitable.
-6. Kafka write failures: UserEventProducer.java checks the result
-   of producer.write(...). On failure, it logs the error and fails
-   the returned future with the original cause. The inspected
-   getKafkaFutures(...) and processOutboxEventLogs(...) methods
-   compose futures before attempting outbox deletion. Under standard
-   Vert.x future-composition behavior, a failed send should fail this
-   chain and prevent the subsequent deletion step.
-7. Kafka-disabled behavior: The default UserEventProducer
-   constructor obtains its enablement setting from
-   KafkaConfigSingleton.INSTANCE.isKafkaEnabled(). When publishing is
-   disabled, sendUserEvent(...) returns a successful future
-   containing false. The inspected outbox-processing code does not
-   inspect individual Boolean results before deriving event IDs for
-   deletion. The intended behavior, including whether outbox records
-   should be retained when Kafka is disabled, remains unverified.
-8. Producer cleanup: sendToKafka(...) calls producer.end()
-   after the write completes and calls producer.close() on successful
-   completion of end(). The inspected code does not establish how
-   cleanup is handled if end() fails.
-Finding
-The inspected paths provide evidence of explicit failure propagation for
-database operations and Kafka writes. They do not establish complete
-runtime resilience across all dependencies or configuration states.
-Recommended follow-up
-- Verify required and optional configuration settings and behavior
-  when settings are missing or invalid.
-- Confirm the intended outbox behavior when Kafka publishing is
-  disabled, including whether events should remain available for later
-  delivery.
+## 4. S010 — Runtime dependencies and configuration
+
+**Assessment:** Manual review required. The inspected code demonstrates explicit failure propagation in several database and Kafka write paths. Runtime behavior is not fully verified for all dependencies and configuration states.
+
+**Evidence reviewed**
+
+**1. Configuration declarations**
+
+`descriptors/ModuleDescriptor-template.json` declares configuration inputs for database connectivity, Kafka, and object storage. The descriptor alone does not establish which settings are mandatory at runtime or what happens when settings are missing or invalid.
+
+**2. HTTP client behavior**
+
+`HttpClientFactory.java` creates and caches a `VertxOkapiHttpClient` per Vert.x instance. `VertxOkapiHttpClient.java` applies explicit timeouts to several request methods and converts responses to the wrapper's response model. Failure behavior across all HTTP operations has not been fully verified.
+
+**3. HTTP response handling**
+
+`ResponseInterpreter.java` converts unsuccessful HTTP responses into `HttpException` failures. `FeesFinesModuleClientImpl.java` logs and propagates failures in the inspected operations.
+
+**4. Database failures**
+
+`RecordRepositoryImpl.java` uses `getAsyncResultHandler` for inspected read and update operations. `ResultHandlerUtils.java` completes a promise successfully when an asynchronous operation succeeds and fails it with the original cause when the operation fails. This supports failure propagation in the reviewed repository paths, but does not establish how every database failure is ultimately returned to API callers.
+
+**5. Object-storage failures**
+
+`ProfilePictureStorage.java` catches exceptions in inspected object-storage operations and translates them into API responses. Some caught failures, including failures retrieving a presigned URL or fetching an image, can be returned as 404. Further review is needed to determine whether storage outages and other infrastructure failures are classified appropriately and whether timeout behavior is suitable.
+
+**6. Kafka write failures**
+
+`UserEventProducer.java` checks the result of `producer.write(...)`. On failure, it logs the error and fails the returned future with the original cause. The inspected `getKafkaFutures(...)` and `processOutboxEventLogs(...)` methods compose futures before attempting outbox deletion. Under standard Vert.x future-composition behavior, a failed send should fail this chain and prevent the subsequent deletion step.
+
+**7. Kafka-disabled behavior**
+
+The default `UserEventProducer` constructor obtains its enablement setting from `KafkaConfigSingleton.INSTANCE.isKafkaEnabled()`. When publishing is disabled, `sendUserEvent(...)` returns a successful future containing `false`. The inspected outbox-processing code does not inspect individual Boolean results before deriving event IDs for deletion. The intended behavior, including whether outbox records should be retained when Kafka is disabled, remains unverified.
+
+**8. Producer cleanup**
+
+`sendToKafka(...)` calls `producer.end()` after the write completes and calls `producer.close()` on successful completion of `end()`. The inspected code does not establish how cleanup is handled if `end()` fails.
+
+**Finding**
+
+The inspected paths provide evidence of explicit failure propagation for database operations and Kafka writes. They do not establish complete runtime resilience across all dependencies or configuration states.
+
+**Recommended follow-up**
+
+- Verify required and optional configuration settings and behavior when settings are missing or invalid.
+- Confirm the intended outbox behavior when Kafka publishing is disabled, including whether events should remain available for later delivery.
 - Verify object-storage error classification and timeout behavior.
-- Confirm producer cleanup when end() fails.
-- Review remaining database and HTTP client failure paths, including
-  how failures are surfaced to API callers.
-Status: Manual review required.
+- Confirm producer cleanup when `end()` fails.
+- Review remaining database and HTTP client failure paths, including how failures are surfaced to API callers.
+
+**Status:** Manual review required.
+
 5. API permissions
 Assessment: Manual review required.
 Evidence
