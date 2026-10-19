@@ -566,19 +566,21 @@ Prioritize the remaining work as follows:
 
 ## 19. References
 
-- FOLIO `mod-users` v19.6.2 source
-- FOLIO Technical Council module acceptance criteria
-- Module descriptor
-- Deployment descriptor
-- Maven configuration
-- README
-- Personal-data disclosure
-- RAML directory in `mod-users`
-- Module descriptor in the reviewed `mod-users` fork snapshot
-- Shared `folio-custom-fields` RAML documentation
-- Reference-data directory
-- Integration-test directory
-- Health endpoint integration test
+The evaluation used the following source materials:
 
-**Review status:** Preliminary evaluation updated October 16, 2026. Targeted remediation and manual verification remain outstanding.
+- FOLIO `mod-users` version `v19.6.2` source code.
+- FOLIO Technical Council module acceptance criteria.
+- `descriptors/ModuleDescriptor-template.json`.
+- `descriptors/DeploymentDescriptor-template.json`.
+- Maven configuration (`pom.xml`).
+- Module README.
+- `PERSONAL_DATA_DISCLOSURE.md`.
+- RAML documentation in the `mod-users` repository.
+- Module descriptor from the reviewed `mod-users` fork snapshot.
+- Shared `folio-custom-fields` RAML documentation.
+- Reference-data files and implementation.
+- Integration-test classes.
+- `src/test/java/org/folio/rest/InstallUpgradeIT.java`, including the `/admin/health` test.
+
+**Review status:** Preliminary evaluation updated October 16, 2026. Targeted follow-up and manual verification remain outstanding.
 
