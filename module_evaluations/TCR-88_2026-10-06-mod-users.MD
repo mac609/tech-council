@@ -573,7 +573,7 @@ Prioritize the remaining work as follows:
 - [Deployment descriptor template](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/DeploymentDescriptor-template.json)
 - [Maven configuration (`pom.xml`)](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml)
 - [Module README](https://github.com/folio-org/mod-users/blob/v19.6.2/README.md)
-- [Personal-data disclosure](https://github.com/folio-org/mod-users/blob/v19.6.2/PERSONAL_DATA_DISCLOSURE.md)
+- [Personal-data disclosure (`PERSONAL_DATA_DISCLOSURE.md`)](https://github.com/mac609/mod-users/blob/master/PERSONAL_DATA_DISCLOSURE.md)
 - [RAML API documentation directory](https://github.com/folio-org/mod-users/tree/v19.6.2/ramls)
 - [Reference-data directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/main/resources)
 - [Integration-test directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/test/java)
