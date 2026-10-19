@@ -551,7 +551,7 @@ Prioritize the remaining work as follows:
 
 2. **S010 — Runtime dependencies:** Review required and optional configuration behavior and clarify how the module handles outbox processing when Kafka is disabled. Existing tests cover profile-picture operations, including object storage, invalid inputs, and some configuration scenarios. Further review would help clarify behavior when object-storage settings are missing or invalid, or when the storage service encounters an error or timeout. The inspected profile-picture retrieval method returns HTTP 404 for caught exceptions; confirm whether this response is appropriate for different types of storage errors. The inspected Kafka producer code closes the producer when the shutdown operation succeeds. Further review would help clarify how cleanup is handled if shutdown fails and whether additional cleanup is performed elsewhere. Review the remaining HTTP and database failure paths to confirm that errors are handled as intended.
 
-3. **API endpoint documentation:** Confirm where `/_/tenant` and `/_/tenant/{id}` are documented. Compare the module descriptor's declared handlers against the relevant RAML documentation before marking this criterion fully satisfied.
+3. **API endpoint documentation:** Verify where `/_/tenant` and `/_/tenant/{id}` are documented. Compare the handlers listed in the module descriptor with the relevant RAML documentation to confirm that the documentation and declared endpoints are consistent before marking this criterion fully satisfied.
 
 4. **API permissions:** Verify runtime enforcement, field-level protection, and completeness of permission mappings.
 
