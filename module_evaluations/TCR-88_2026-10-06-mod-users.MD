@@ -549,7 +549,7 @@ Prioritize the remaining work as follows:
 
 1. **S005 — Personal-data disclosure:** Review the disclosure against the implementation and data flows. The review confirmed that user-related personal data is transmitted to Kafka. Verify the disclosure's accuracy and completeness, particularly the free-form text, caching, and logging selections, and confirm that the other selected personal-data categories are accurate.
 
-2. **S010 — Runtime dependencies:** Verify required and optional configuration behavior; confirm Kafka-disabled outbox handling; review object-storage error classification and timeout behavior; verify producer cleanup when `end()` fails; and inspect remaining HTTP and database failure paths.
+2. **S010 — Runtime dependencies:** Verify required and optional configuration behavior; confirm Kafka-disabled outbox handling; review object-storage error classification, missing or invalid settings, and timeout behavior. The inspected profile-picture retrieval method returns HTTP 404 for all caught exceptions, so confirm whether storage failures should instead return a server-error response. Verify producer cleanup when `end()` fails and inspect remaining HTTP and database failure paths.
 
 3. **API endpoint documentation:** Confirm where `/_/tenant` and `/_/tenant/{id}` are documented. Compare the module descriptor's declared handlers against the relevant RAML documentation before marking this criterion fully satisfied.
 
