@@ -553,25 +553,25 @@ Prioritize the remaining work as follows:
 
 3. **API endpoint documentation:** Verify where `/_/tenant` and `/_/tenant/{id}` are documented. Compare the handlers listed in the module descriptor with the relevant RAML documentation to confirm that the documentation and declared endpoints are consistent before marking this criterion fully satisfied.
 
-4. **API permissions:** Further review would help confirm runtime enforcement, field-level protection, and the completeness of permission mappings.
+4. **API permissions:** Further review would help confirm how permissions are enforced at runtime, how field-level protection is applied, and whether the permission mappings are complete.
 
-5. **Module descriptor and deployment descriptor:** Complete the endpoint-by-endpoint comparison to confirm that declared permissions are consistent with the implementation.
+5. **Module descriptor and deployment descriptor:** Complete the endpoint-by-endpoint comparison to confirm that the permissions declared in the descriptors are consistent with the implementation.
 
-6. **Reference data:** Verify installation and upgrade behavior, including how tenant-customized records are preserved.
+6. **Reference data:** Verify installation and upgrade behavior, including how tenant-customized records are preserved, to confirm that the module behaves as intended across these scenarios.
 
-7. **Integration tests:** Confirm which test suites pass and verify the applicable official support status of the testing technologies.
+7. **Integration tests:** Confirm which integration test suites pass in the applicable environment and verify whether the testing technologies meet the relevant official support requirements.
 
-8. **Tenant isolation:** Review or add tests using two distinct tenant IDs to help confirm that one tenant cannot access another tenant's records.
+8. **Tenant isolation:** Review existing test coverage and, where needed, add tests using two distinct tenant IDs to help confirm that each tenant can access only its own records.
 
-9. **`/admin/health`:** Confirm that the integration test passes in the applicable environment, or verify the endpoint in a deployed environment.
+9. **`/admin/health`:** Confirm that the existing integration test passes in the applicable environment or, if appropriate, verify the endpoint in a deployed environment.
 
-10. **Dependency documentation:** Confirm the applicable documentation requirements for the optional `feesfines` and `configuration` dependencies.
+10. **Dependency documentation:** Confirm the applicable documentation requirements for the optional `feesfines` and `configuration` dependencies and whether the existing documentation addresses them adequately.
 
-11. **High availability:** Review the remaining storage and session-related code for local state or instance affinity, and test multi-instance behavior where practical.
+11. **High availability:** Review the remaining storage and session-related code to understand whether operation depends on local state or a particular application instance. Where practical, verify behavior when multiple instances are running.
 
-12. **Supported technologies:** Compare the effective production dependency tree, including transitive dependencies and resolved versions, with the official supported-technologies requirements. Include the S3-compatible storage library in this review.
+12. **Supported technologies:** Compare the effective production dependencies, including transitive dependencies and resolved versions, with the official supported-technologies requirements. Include the S3-compatible storage library in the comparison to confirm that the relevant dependencies meet those requirements.
 
-13. **Database schema access:** Extend the review to the relevant SQL scripts and database access paths to confirm that the evaluation has sufficient evidence of the module's database behavior.
+13. **Database schema access:** Extend the review of relevant SQL scripts and database access paths to confirm that the available evidence adequately addresses the evaluation criteria.
 
 ## 19. References
 
