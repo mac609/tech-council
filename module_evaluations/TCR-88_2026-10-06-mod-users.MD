@@ -412,26 +412,31 @@ The module descriptor identifies the optional dependencies, but the available ev
 - Update the documentation if required.
 
 **Status:** Manual review required.
-13. Tenant-specific responses and x-okapi-tenant
-Assessment: Evidence supports tenant-aware test setup; response
-behavior remains unverified.
-The test setup in AbstractRestTest.java initializes OkapiHeaders and
-a PostgreSQL client with the same tenant identifier:
-okapiHeaders = new OkapiHeaders(wireMockUrl, TENANT_NAME, token);
-postgresClient = PostgresClient.getInstance(vertx, TENANT_NAME);
-The setup then passes the headers into module initialization.
-Finding and limitation
-The inspected test setup is tenant-aware and configures a database
-client for the specified tenant. This evidence does not independently
-establish that outgoing HTTP requests include the expected
-x-okapi-tenant header or that responses contain only data belonging to
-the requested tenant. Cross-tenant response isolation has not been
-demonstrated by the inspected snippet.
-Recommended action
-Inspect how OkapiHeaders constructs request headers and review or
-perform integration tests using two tenants to verify that each tenant
-receives only its own data.
-Status: Further verification required.
+
+## 13. Tenant-specific responses and `x-okapi-tenant`
+
+**Assessment:** Further verification required.
+
+**Evidence**
+
+`AbstractRestTest.java` sets the tenant name in the Okapi request headers using `OkapiHeaders(wireMockUrl, TENANT_NAME, token)`.
+
+The test setup also creates a PostgreSQL client using `PostgresClient.getInstance(vertx, TENANT_NAME)` and passes the headers into module initialization.
+
+This demonstrates tenant-aware test setup for the inspected paths. It does not establish that every outgoing request carries the correct `x-okapi-tenant` header or that responses are isolated correctly between tenants.
+
+**Finding**
+
+The inspected test setup uses tenant-specific information, but outgoing request-header behavior and cross-tenant response isolation remain unverified. No violation has been established by the reviewed evidence.
+
+**Recommended action**
+
+- Review outgoing requests to confirm that the correct `x-okapi-tenant` header is used where required.
+- Verify that responses and stored data are isolated between tenants.
+- Review or add tests that exercise requests using two different tenant IDs.
+
+**Status:** Further verification required.
+
 14. /admin/health endpoint
 Assessment: Test evidence identified; execution status unverified.
 src/test/java/org/folio/rest/InstallUpgradeIT.java
