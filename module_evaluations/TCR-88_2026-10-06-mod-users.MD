@@ -167,77 +167,62 @@ Permission declarations and selected endpoint mappings were inspected. Complete 
 
 **Status:** Manual review required.
 
-6. API endpoint documentation
-Assessment: Preliminary evidence supports RAML documentation for the
-principal API resources; complete endpoint coverage remains to be
-confirmed.
-Checklist context
-The checklist item states that API endpoints should be documented in
-OpenAPI and includes an exception allowing existing RMB-based modules to
-continue using RAML. The inspected mod-users repository uses RAML
-files, so RAML is an allowed documentation format under that exception.
-RAML files reviewed in mod-users
-The ramls directory contains documentation for these principal
-resources:
-- users.raml --- user collection and individual user operations,
-  expiration timer, outbox processing, profile-picture operations and
-  cleanup, and configuration-entry operations.
-- groups.raml --- user-group collection and item resources.
-- addressTypes.raml --- address-type collection and item resources.
-- proxiesFor.raml --- proxy relationship collection and item
-  resources.
-- departments.raml --- department collection and item resources.
-- patronpin.raml --- patron PIN set, delete, and verify operations.
-- userTenants.raml --- user-tenant collection operations.
-- settings.raml --- user settings collection and item resources.
-- staging_users.raml --- staging-user collection, update by external
-  system ID, and merge-or-create operation.
-The inspected RAML files include endpoint operations and, where
-applicable, descriptions, request and response information, examples,
-schemas, and error responses. Some item resources use the shared
-raml-util/rtypes/item-collection.raml resource type. The inspected
-shared resource type defines standard GET, PUT, and DELETE operations
-for an individual record.
-One documentation detail was noted in departments.raml: its title says
-"User Groups" although the described resource and endpoints concern
-departments. This is a metadata inconsistency; by itself, it does not
-establish that the endpoints are undocumented.
-Custom-fields interface
-The mod-users module descriptor declares a custom-fields interface
-and handler paths including:
-- /custom-fields
-- /custom-fields/{id}
-- /custom-fields/{id}/stats
-- /custom-fields/{id}/options/{optId}/stats
-There is no custom-fields.raml file in the mod-users/ramls
-directory. However, the separate folio-custom-fields
-repository contains
-ramls/custom-fields.raml.
-The inspected custom-fields.raml documents the /custom-fields
-collection and /{id} item resource. It also explicitly documents the
-GET operations for /{id}/stats and /{id}/options/{optId}/stats, with
-descriptions, response codes, examples, and schemas. The collection and
-item resources use shared RAML resource types for standard operations.
-This is evidence that the custom-fields API documentation exists in the
-shared library repository, even though it is not duplicated in
-mod-users/ramls.
-Outstanding endpoint check
-The module descriptor also declares the system tenant paths /_/tenant
-and /_/tenant/{id} under its _tenant interface. Their documentation
-location was not confirmed during this review.
-A complete endpoint-by-endpoint comparison of every handler in the
-module descriptor against the relevant RAML documentation has not been
-completed. Therefore, the current evidence supports the use of RAML and
-shows documentation for the principal resources and the shared
-custom-fields interface, but it does not yet prove that every declared
-endpoint is documented.
-Finding
-The reviewed repositories contain RAML documentation for the principal
-mod-users API resources and the custom-fields interface. The checklist
-exception permits RAML for an existing RMB-based module. The system
-tenant paths and complete descriptor-to-documentation coverage remain to
-be confirmed.
-Status: Preliminary; final endpoint coverage check outstanding.
+## 6. API endpoint documentation
+
+**Assessment:** Preliminary; a complete endpoint documentation check remains outstanding.
+
+**Evidence**
+
+The Technical Council criterion calls for API endpoints to be documented in OpenAPI. Existing RMB modules may continue to use RAML under the stated exception. `mod-users` uses RAML documentation.
+
+The inspected RAML files include:
+
+- `users.raml`
+- `groups.raml`
+- `addressTypes.raml`
+- `proxiesFor.raml`
+- `departments.raml`
+- `patronpin.raml`
+- `userTenants.raml`
+- `settings.raml`
+- `staging_users.raml`
+
+`users.raml` documents user collection and individual-user operations. It also documents related operations for expiration timers, outbox processing, profile-picture operations and cleanup, and configuration entries.
+
+The shared `raml-util/rtypes/item-collection.raml` file defines standard GET, PUT, and DELETE operations for individual records.
+
+**Documentation issue identified**
+
+The title in `departments.raml` says “User Groups,” although the file documents the departments resource. This is a documentation inconsistency that should be corrected or clarified.
+
+**Custom-fields endpoints**
+
+`ModuleDescriptor-template.json` declares handlers for the following custom-fields endpoints:
+
+- `/custom-fields`
+- `/custom-fields/{id}`
+- `/custom-fields/{id}/stats`
+- `/custom-fields/{id}/options/{optId}/stats`
+
+The `mod-users` repository does not contain a `custom-fields.raml` file. However, the shared `folio-org/folio-custom-fields` repository contains `ramls/custom-fields.raml`, which documents collection, item, and statistics endpoints.
+
+**Tenant endpoints**
+
+The module descriptor declares the `/_tenant` interface with the `/_/tenant` and `/_/tenant/{id}` endpoints. Documentation for these endpoints has not yet been confirmed.
+
+**Finding**
+
+RAML documentation exists for the principal `mod-users` resources, and shared documentation exists for the custom-fields interface. A complete comparison of all declared handlers against the applicable API documentation has not been completed.
+
+**Recommended action**
+
+- Confirm where `/_/tenant` and `/_/tenant/{id}` are documented.
+- Compare all API handlers in the module descriptor against the relevant RAML documentation.
+- Clarify or correct the title in `departments.raml`.
+- Confirm that the applicable RAML exception covers this module.
+
+**Status:** Preliminary; final documentation coverage check outstanding.
+
 7. Module descriptor and deployment descriptor
 Assessment: Manual review required; no confirmed descriptor defect
 identified in the reviewed evidence.
