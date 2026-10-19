@@ -547,7 +547,7 @@ These results summarize the evidence collected during the review. They are preli
 
 Prioritize the remaining work as follows:
 
-1. **S005 — Personal-data disclosure:** Manually review `PERSONAL_DATA_DISCLOSURE.md` against the implementation and data flows. Confirm that the disclosure is accurate and complete.
+1. **S005 — Personal-data disclosure:** Review the disclosure against the implementation and data flows. The review confirmed that user-related personal data is transmitted to Kafka. Verify the disclosure's accuracy and completeness, particularly the free-form text, caching, and logging selections, and confirm that the other selected personal-data categories are accurate.
 
 2. **S010 — Runtime dependencies:** Verify required and optional configuration behavior; confirm Kafka-disabled outbox handling; review object-storage error classification and timeout behavior; verify producer cleanup when `end()` fails; and inspect remaining HTTP and database failure paths.
 
