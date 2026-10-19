@@ -458,28 +458,29 @@ The test provides evidence that the module has integration-test coverage for the
 
 **Status:** Test coverage identified; successful execution remains unverified.
 
-15. High availability
-Assessment: Evidence supports the reviewed storage path; full
-high-availability compliance remains unverified.
-The reviewed ProfilePictureStorage.java methods:
-- Obtain the tenant identifier from the x-okapi-tenant header.
-- Prefix object keys with the tenant identifier.
-- Use FolioS3Client to write, retrieve, and remove profile pictures.
-- Use in-memory byte streams when writing profile-picture data.
-No FileOutputStream match was found in the reviewed file.
-Finding and limitation
-The inspected profile-picture storage implementation uses an
-object-storage client and does not show a dependency on local filesystem
-persistence for the reviewed operations. This does not establish that
-the entire module avoids local persistent storage, sticky sessions,
-connection affinity, or other high-availability concerns. Concurrent
-requests across multiple module instances have not been tested.
-Recommended action
-Review the remaining storage and session-related code for dependencies
-on local state or instance affinity. Where practical, test concurrent
-operations across multiple module instances to assess whether the
-relevant functionality works without relying on a particular instance.
-Status: Further verification required.
+## 15. High availability
+
+**Assessment:** Further verification required.
+
+**Evidence**
+
+`ProfilePictureStorage.java` obtains the tenant ID from the `x-okapi-tenant` header and uses it to prefix object-storage keys. The inspected code uses `FolioS3Client` for profile-picture storage and handles image data through in-memory byte streams.
+
+A search of the reviewed `ProfilePictureStorage.java` file did not identify a `FileOutputStream` match.
+
+**Finding**
+
+The inspected profile-picture storage path uses object storage rather than an identified local file-output stream in that file. This does not establish that the entire module avoids local state or session affinity, nor does it demonstrate that the module behaves correctly when multiple instances are running.
+
+**Recommended action**
+
+- Review the remaining module code for local state or other instance-specific dependencies.
+- Verify whether any session affinity is required.
+- Where practical, test module behavior with multiple instances.
+
+**Status:** Further verification required.
+
+
 16. Officially supported infrastructure and platform technologies
 Assessment: Manual verification required.
 The reviewed files identify the following infrastructure technologies
