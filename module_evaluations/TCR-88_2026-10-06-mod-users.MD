@@ -335,32 +335,35 @@ Integration-test classes and testing dependencies are present. Their presence do
 
 **Status:** Further verification required.
 
-10. Tenant data segregation at the storage layer
-Assessment: Manual review required. The inspected code selects
-tenant-specific PostgreSQL clients in RecordRepositoryImpl.java,
-UserOutboxService.java, and ProfilePictureStorage.java.
-UserOutboxService.java derives the tenant ID from the Okapi headers,
-while AbstractRestTest.java initializes its test client and headers
-using the same tenant (diku).
-The repository defines a tenant-aware client method:
-private PostgresClient pgClient(String tenantId) {
-    return PostgresClient.getInstance(vertx, tenantId);
-}
-The reviewed retrieval and update methods use pgClient(tenantId) for
-operations on the users table. For example:
-pgClient(tenantId).update(
-    USERS_TABLE, user, user.getId(), getAsyncResultHandler(promise)
-);
-The integration-test setup also initializes OkapiHeaders with
-TENANT_NAME and obtains a PostgreSQL client for that tenant.
-Finding and limitation
-The inspected methods consistently pass a tenant identifier to the
-database client. No explicit test comparing access across two different
-tenants was identified in the reviewed results. This evidence does not
-independently prove the underlying client's isolation guarantees or
-establish that every database access path is tenant-isolated. No
-tenant-isolation violation has been established.
-Status: Manual review required.
+## 10. Tenant data segregation at the storage layer
+
+**Assessment:** Manual review required.
+
+**Evidence**
+
+The review examined `RecordRepositoryImpl.java`, `UserOutboxService.java`, and `ProfilePictureStorage.java` for evidence of tenant-aware data access.
+
+`RecordRepositoryImpl.java` uses tenant-specific PostgreSQL clients for the inspected retrieval and update operations. The reviewed code includes the following method:
+
+`private PostgresClient pgClient(String tenantId) { return PostgresClient.getInstance(vertx, tenantId); }`
+
+`UserOutboxService.java` obtains the tenant ID from the Okapi request headers.
+
+`AbstractRestTest.java` uses the tenant ID `diku` in both Okapi headers and the PostgreSQL client setup.
+
+**Finding**
+
+The inspected code provides evidence that these paths use tenant-specific database clients or tenant information. However, this does not demonstrate that all data-access paths prevent one tenant from accessing another tenant's records.
+
+No explicit test using two different tenants to verify cross-tenant isolation was identified in the reviewed evidence. No tenant-isolation violation has been established.
+
+**Recommended action**
+
+- Review remaining database and storage access paths for tenant-specific handling.
+- Review existing tests for cross-tenant access protection.
+- Where practical, add or run tests using two distinct tenant IDs to verify that one tenant cannot access another tenant's data.
+
+**Status:** Manual review required.
 11. Database schema access
 Assessment: No violation identified in the inspected results; complete
 module-wide verification remains outstanding.
