@@ -389,21 +389,29 @@ The limited searches did not identify evidence of an application table being acc
 
 **Status:** No violation identified in the inspected evidence; further verification required.
 
-12. Dependency documentation
-Assessment: Manual review required.
-The module descriptor identifies feesfines and configuration as
-optional dependencies. The README content reviewed documents
-profile-picture configuration and S3-compatible storage but does not
-explicitly explain the feesfines dependency.
-Finding
-The documentation requirement for dependencies outside defined
-interfaces has not been fully determined. The absence of an explanation
-in the reviewed README content does not, by itself, establish a
-violation.
-Recommended follow-up
-Confirm which dependency-documentation requirements apply to mod-users
-and whether the feesfines dependency needs additional explanation.
-Status: Manual review required.
+## 12. Dependency documentation
+
+**Assessment:** Manual review required.
+
+**Evidence**
+
+The module descriptor lists `feesfines` and `configuration` as optional dependencies.
+
+The README describes profile-picture and S3-related functionality, but the reviewed material does not clearly document the `feesfines` dependency.
+
+The applicable documentation requirements for optional dependencies have not been confirmed.
+
+**Finding**
+
+The module descriptor identifies the optional dependencies, but the available evidence does not establish whether their documentation meets all applicable requirements. No confirmed violation has been identified.
+
+**Recommended action**
+
+- Confirm the Technical Council's documentation requirements for optional dependencies.
+- Check whether the README or other module documentation should explain the purpose of `feesfines` and `configuration`.
+- Update the documentation if required.
+
+**Status:** Manual review required.
 13. Tenant-specific responses and x-okapi-tenant
 Assessment: Evidence supports tenant-aware test setup; response
 behavior remains unverified.
