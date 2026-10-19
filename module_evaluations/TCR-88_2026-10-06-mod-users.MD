@@ -10,26 +10,35 @@
 
 ## 1. Executive summary
 
-This document records a preliminary, evidence-based review of selected FOLIO Technical Council acceptance criteria for mod-users, a backend module that maintains user records and related user information.
+This document records a preliminary, evidence-based review of selected FOLIO Technical Council acceptance criteria for `mod-users`, a backend module that maintains user records and related user information.
 
 The review considered source code, RAML API documentation, Maven configuration, module and deployment descriptors, integration-test files, the README, the personal-data disclosure, and the automated module-evaluation results.
 
-The automated evaluator reported 31 criteria: 5 passed, 0 failed, and 26 requiring manual review after the personal-data disclosure filename was corrected. The evaluator found and parsed `PERSONAL_DATA_DISCLOSURE.md`, but its semantic review was skipped because agent review was disabled or unconfigured. The result therefore does not mean that all manual-review criteria have passed.
+The automated evaluator reported 31 criteria: 5 passed, 0 failed, and 26 requiring manual review after the personal-data disclosure filename was corrected. The evaluator found and parsed `PERSONAL_DATA_DISCLOSURE.md`, but its semantic review was skipped because agent review was disabled or unconfigured. The results therefore do not establish that all manual-review criteria have been satisfied.
 
 ### Principal findings
 
-- **S005 — Personal-data disclosure:** The required personal-data disclosure file was found and parsed after the filename correction. Review of the code confirmed that user-related personal data is transmitted to Kafka. However, the disclosure’s overall accuracy and completeness, including its statements about free-form text, caching, and logging, still require manual review because the evaluator did not perform semantic review.
-- **S010 — Runtime dependencies and configuration:** Several inspected database and Kafka write paths propagate failures through asynchronous futures. Configuration-absent or invalid behavior, object-storage error classification, Kafka-disabled outbox behavior, producer cleanup, and unreviewed failure paths still need verification.
-- **API permissions:** The module descriptor declares permissions for the inspected handlers. Complete permission coverage, runtime authorization, and field-level protection remain unverified.
-- **API endpoint documentation:** The module uses RAML documentation. The checklist explicitly permits RAML for existing RMB-based modules. RAML files were reviewed for the principal mod-users API resources. The separate folio-custom-fields repository also contains RAML documentation for custom-field collection and item operations and both custom-field statistics endpoints. A complete comparison of all descriptor-declared endpoints has not been completed; the `/_/tenant` and `/_/tenant/{id}` paths remain to be checked.
-- **Module descriptor and reference data:** The reviewed descriptor and implementation provide evidence of alignment. Reference-data loading is version-aware in the inspected code. Complete descriptor comparison and actual installation/upgrade behavior remain unverified.
-- **Integration tests:** Integration-test classes and test dependencies are present. The presence of tests does not establish that the complete suite passes.
-- **Tenant isolation and tenant-specific responses:** The inspected code uses tenant-aware PostgreSQL client selection. Cross-tenant isolation and outgoing request-header behavior have not been fully demonstrated.
-- **Database schema and dependency documentation:** No prohibited cross-schema access was identified in the limited search reviewed. The applicable documentation requirements for optional dependencies need clarification.
-- **Health endpoint:** `InstallUpgradeIT.java` contains a test asserting that `GET /admin/health` returns HTTP 200 and body `"OK"`. Successful execution of the test remains unverified.
-- **High availability and supported technologies:** The reviewed profile-picture storage path uses an object-storage client. The Maven configuration specifies Java 21, consistent with the cited FOLIO Trillium backend technology guidance. Module-wide high-availability behavior and full production dependency compliance remain unverified.
+- **S005 — Personal-data disclosure:** The required personal-data disclosure file was located and parsed after the filename correction. Code review confirmed that user-related personal data is transmitted to Kafka. Further review would help confirm that the disclosure accurately and completely describes the relevant data flows, including free-form text, caching, and logging.
 
-**Overall conclusion:** This is a preliminary evaluation, not a declaration that all acceptance criteria have passed. Findings marked for manual review or further verification should remain open until supported by sufficient evidence.
+- **S010 — Runtime dependencies and configuration:** Several inspected database and Kafka write paths propagate failures through asynchronous futures. Further review would help clarify behavior when configuration is missing or invalid, object storage encounters errors or timeouts, Kafka is disabled, or producer shutdown fails. Other HTTP and database failure paths also remain to be reviewed.
+
+- **API permissions:** The module descriptor declares permissions for the inspected handlers. Further review would help confirm the completeness of permission mappings, runtime authorization, and field-level protection.
+
+- **API endpoint documentation:** The module uses RAML documentation, which the checklist permits for existing RMB-based modules. RAML files were reviewed for the principal `mod-users` API resources. The separate `folio-custom-fields` repository also contains RAML documentation for custom-field collection and item operations and both custom-field statistics endpoints. A complete comparison of descriptor-declared endpoints and their documentation remains outstanding, including confirmation of the `/_/tenant` and `/_/tenant/{id}` paths.
+
+- **Module descriptor and reference data:** The reviewed descriptor and implementation provide evidence of alignment. The inspected reference-data loading code is version-aware. A complete descriptor comparison and verification of installation, upgrade, and preservation of tenant-customized records remain outstanding.
+
+- **Integration tests:** Integration-test classes and test dependencies are present. Confirming successful execution of the applicable test suites and the official support status of the testing technologies would complete this part of the review.
+
+- **Tenant isolation and tenant-specific responses:** The inspected code uses tenant-aware PostgreSQL client selection. Further verification would help establish cross-tenant isolation and confirm outgoing request-header behavior and response isolation.
+
+- **Database schema and dependency documentation:** No prohibited cross-schema access was identified in the evidence reviewed. A broader review of SQL scripts and database access paths remains outstanding. Further review would also help clarify the applicable documentation requirements for optional dependencies.
+
+- **Health endpoint:** `InstallUpgradeIT.java` contains a test asserting that `GET /admin/health` returns HTTP 200 and body `"OK"`. Confirmation that the test passes in the applicable environment remains outstanding.
+
+- **High availability and supported technologies:** The reviewed profile-picture storage path uses an object-storage client. The Maven configuration specifies Java 21, consistent with the cited FOLIO Trillium backend technology guidance. Further review would help complete the assessment of module-wide high-availability behavior and compatibility with the applicable supported-technologies requirements, including production and transitive dependencies.
+
+**Overall conclusion:** This is a preliminary evaluation, not a declaration that all acceptance criteria have been satisfied. Findings requiring manual review or further verification should remain open until sufficient supporting evidence has been collected. The purpose of the remaining work is to clarify and document the evidence for the existing module against the Technical Council's evaluation criteria.
 
 ## 2. Review scope and method
 
