@@ -566,70 +566,51 @@ Status: Manual verification required.
 
 These results summarize the evidence collected during the review. They are preliminary assessments, not declarations of complete compliance. Items marked unverified or requiring manual review should remain open until sufficient evidence has been collected.
 
-18. Recommended follow-up actions
+## 18. Recommended follow-up actions
+
 Prioritize the remaining work as follows:
-1. S005 --- Personal-data disclosure: Manually review
-   PERSONAL_DATA_DISCLOSURE.md against the implementation and data
-   flows. Confirm that the disclosure is accurate and complete.
-2. S010 --- Runtime dependencies: Verify required and optional
-   configuration behavior; confirm Kafka-disabled outbox handling;
-   review object-storage error classification and timeout behavior;
-   verify producer cleanup when end() fails; and inspect remaining
-   HTTP and database failure paths.
-3. API endpoint documentation: Confirm where /_/tenant and
-   /_/tenant/{id} are documented. Complete a comparison of the module
-   descriptor's declared handlers against the relevant RAML
-   documentation before marking the criterion fully satisfied.
-4. API permissions: Verify runtime enforcement, field-level
-   protection, and completeness of permission mappings.
-5. Module descriptor: Complete the endpoint-by-endpoint and
-   permission-by-permission comparison.
-6. Reference data: Verify installation and upgrade behavior,
-   including preservation of tenant-customized records.
-7. Integration tests: Confirm which test suites pass and verify the
-   applicable official support status of testing technologies.
-8. Tenant isolation: Review or add tests using two distinct tenant
-   IDs to confirm that one tenant cannot access another tenant's
-   records.
-9. /admin/health: Confirm that the integration test passes in the
-   applicable environment or verify the endpoint in a deployed
-   environment.
-10. Dependency documentation: Confirm the applicable requirements
-    for the optional feesfines and configuration dependencies.
-11. High availability: Review remaining storage and session-related
-    code for local state or instance affinity, and test multi-instance
-    behavior where practical.
-12. Supported technologies: Compare the effective production
-    dependency tree, including transitive dependencies and resolved
-    versions, with the official supported-technologies requirements.
-    Verify the S3-compatible storage library as well.
-13. Database schema access: Complete a broader review of SQL scripts
-    and database access paths.
-19. References
-- FOLIO mod-users v19.6.2
-  source
-- FOLIO Technical Council module acceptance
-  criteria
-- Module
-  descriptor
-- Deployment
-  descriptor
-- Maven
-  configuration
+
+1. **S005 — Personal-data disclosure:** Manually review `PERSONAL_DATA_DISCLOSURE.md` against the implementation and data flows. Confirm that the disclosure is accurate and complete.
+
+2. **S010 — Runtime dependencies:** Verify required and optional configuration behavior; confirm Kafka-disabled outbox handling; review object-storage error classification and timeout behavior; verify producer cleanup when `end()` fails; and inspect remaining HTTP and database failure paths.
+
+3. **API endpoint documentation:** Confirm where `/_/tenant` and `/_/tenant/{id}` are documented. Compare the module descriptor's declared handlers against the relevant RAML documentation before marking this criterion fully satisfied.
+
+4. **API permissions:** Verify runtime enforcement, field-level protection, and completeness of permission mappings.
+
+5. **Module descriptor and deployment descriptor:** Complete the endpoint-by-endpoint comparison and verify that declared permissions align with the implementation.
+
+6. **Reference data:** Verify installation and upgrade behavior, including preservation of tenant-customized records.
+
+7. **Integration tests:** Confirm which test suites pass and verify the applicable official support status of the testing technologies.
+
+8. **Tenant isolation:** Review or add tests using two distinct tenant IDs to confirm that one tenant cannot access another tenant's records.
+
+9. **`/admin/health`:** Confirm that the integration test passes in the applicable environment or verify the endpoint in a deployed environment.
+
+10. **Dependency documentation:** Confirm the applicable documentation requirements for the optional `feesfines` and `configuration` dependencies.
+
+11. **High availability:** Review remaining storage and session-related code for local state or instance affinity, and test multi-instance behavior where practical.
+
+12. **Supported technologies:** Compare the effective production dependency tree, including transitive dependencies and resolved versions, with the official supported-technologies requirements. Verify the S3-compatible storage library as well.
+
+13. **Database schema access:** Complete a broader review of SQL scripts and database access paths.
+
+## 19. References
+
+- FOLIO `mod-users` v19.6.2 source
+- FOLIO Technical Council module acceptance criteria
+- Module descriptor
+- Deployment descriptor
+- Maven configuration
 - README
-- Personal-data
-  disclosure
-- RAML directory in
-  mod-users
-- Module descriptor in the reviewed mod-users fork
-  snapshot
-- Shared folio-custom-fields RAML
-  documentation
-- Reference-data
-  directory
-- Integration-test
-  directory
-- Health endpoint integration
-  test
-Review status: Preliminary evaluation updated October 16, 2026.
-Targeted remediation and manual verification remain outstanding.
+- Personal-data disclosure
+- RAML directory in `mod-users`
+- Module descriptor in the reviewed `mod-users` fork snapshot
+- Shared `folio-custom-fields` RAML documentation
+- Reference-data directory
+- Integration-test directory
+- Health endpoint integration test
+
+**Review status:** Preliminary evaluation updated October 16, 2026. Targeted remediation and manual verification remain outstanding.
+
