@@ -48,33 +48,30 @@ The review covered:
 
 Evidence was collected by inspecting the relevant source files and configuration. The review distinguishes between evidence that a file or declaration exists and evidence that behavior has been tested. Where the available evidence did not establish runtime behavior or complete coverage, the finding remains preliminary.
 
-3. S005 --- Personal-data disclosure
-Assessment: Manual review required; semantic compliance has not been
-verified.
-Evidence
-The automated evaluator found and parsed PERSONAL_DATA_DISCLOSURE.md
-after the filename was corrected. The latest reported evaluator run
-showed 31 criteria, 5 passed, 0 failed, and 26 manual review. The
-evaluator output states that semantic review was skipped because agent
-review was disabled or unconfigured.
-Finding and parsing the file establishes that the required artifact is
-present and readable. It does not establish that the disclosure
-accurately describes all relevant personal-data collection, processing,
-storage, transmission, sharing, and retention.
-The disclosure indicates that the module provides custom fields and
-identifies categories of personal information. Those selections should
-be compared with the implementation and actual data flows. User-event
-code and other paths that transmit user information deserve particular
-attention.
-Finding
-The disclosure artifact is present and parseable, but its substantive
-accuracy and completeness have not been verified.
-Recommended action
-Compare PERSONAL_DATA_DISCLOSURE.md with the implementation and
-relevant data flows. Confirm that the selected data categories and
-statements about storage, processing, transmission, and other handling
-practices are accurate before marking S005 as satisfied.
-Status: Manual review required.
+## 3. S005 — Personal-data disclosure
+
+**Assessment:** Manual review required; semantic compliance has not been verified.
+
+**Evidence**
+
+The automated evaluator found and parsed `PERSONAL_DATA_DISCLOSURE.md` after the filename was corrected. The latest reported evaluator run showed 31 criteria, 5 passed, 0 failed, and 26 requiring manual review.
+
+The evaluator output states that semantic review was skipped because agent review was disabled or unconfigured.
+
+Finding and parsing the file establishes that the required artifact is present and readable. It does not establish that the disclosure accurately describes all relevant personal-data collection, processing, storage, transmission, sharing, and retention.
+
+The disclosure indicates that the module provides custom fields and identifies categories of personal information. Those selections should be compared with the implementation and actual data flows. User-event code and other paths that transmit user information deserve particular attention.
+
+**Finding**
+
+The disclosure artifact is present and parseable, but its substantive accuracy and completeness have not been verified.
+
+**Recommended action**
+
+Compare `PERSONAL_DATA_DISCLOSURE.md` with the implementation and relevant data flows. Confirm that the selected data categories and statements about storage, processing, transmission, and other handling practices are accurate before marking S005 as satisfied.
+
+**Status:** Manual review required.
+
 4. S010 --- Runtime dependencies and configuration
 Assessment: Manual review required. The inspected code demonstrates
 explicit failure propagation in several database and Kafka write paths.
