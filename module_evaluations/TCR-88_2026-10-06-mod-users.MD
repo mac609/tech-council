@@ -567,7 +567,7 @@ Prioritize the remaining work as follows:
 
 7. **Integration tests:** Confirm which integration test suites pass in the applicable environment and verify whether the testing technologies meet the relevant official support requirements.
 
-8. **Tenant isolation:** Review existing test coverage and, where needed, add tests using two distinct tenant IDs to help confirm that each tenant can access only its own records.
+8. **Tenant isolation:** Review existing test coverage and, where needed, add tests using two distinct tenant IDs to help confirm that each tenant can access only its own records. Further review would also help confirm outgoing request-header behavior, including `x-okapi-tenant`, and isolation of responses between tenants.
 
 9. **`/admin/health`:** Confirm that the existing integration test passes in the applicable environment or, if appropriate, verify the endpoint in a deployed environment.
 
