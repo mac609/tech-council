@@ -480,49 +480,39 @@ The inspected profile-picture storage path uses object storage rather than an id
 
 **Status:** Further verification required.
 
+## 16. Officially supported infrastructure and platform technologies
 
-16. Officially supported infrastructure and platform technologies
-Assessment: Manual verification required.
-The reviewed files identify the following infrastructure technologies
-and dependencies:
-  Technology or dependency            Evidence
-  Vert.x                              vertx-stack-depchain, version
-                                      5.0.10
-  PostgreSQL testing                  org.folio:postgres-testing, test
-                                      scope, version managed by
-                                      ${raml-module-builder.version}
-  FOLIO Kafka wrapper                 org.folio:folio-kafka-wrapper,
-                                      version 4.0.0
-  Apache Kafka client                 org.apache.kafka:kafka-clients,
-                                      version 4.2.0
-  S3-compatible storage               FolioS3ClientFactory and
-                                      FolioS3Client used in
-                                      profile-picture storage
-  Java                                pom.xml sets java.version to
-                                      21; the repository lists Java 21
-                                      JDK as a prerequisite, and FOLIO
-                                      Trillium guidance specifies Java 21
-                                      / JDK 21. This supports alignment
-                                  on Java version only.
-A search for aws in pom.xml did not identify a matching dependency
-entry. This does not establish that AWS-compatible storage is absent;
-the relevant library may use a different artifact name or be supplied
-transitively.
-Finding and recommended action
-The reviewed files identify several infrastructure technologies and
-dependency versions. Their compliance with the official FOLIO
-supported-technologies requirements has not been established.
-- Compare the effective production dependency tree, including
-  transitive dependencies, with the official supported-technologies
-  list applicable to this module version.
-- Confirm resolved versions of dependencies managed through Maven
-  properties and dependency management.
-- Verify that the S3-compatible storage integration uses an approved
-  library and supported configuration.
-Dependency declarations alone do not establish that the technologies are
-officially supported or that the deployed runtime uses the expected
-versions.
-Status: Manual verification required.
+**Assessment:** Manual verification required.
+
+**Evidence**
+
+The review identified the following technologies and dependencies in the module's Maven configuration and source code.
+
+| Technology or component | Evidence |
+|---|---|
+| Java | `pom.xml` sets Java version 21. The README lists Java 21 as a JDK prerequisite. |
+| Vert.x | The `vertx-stack-depchain` dependency is version `5.0.10`. |
+| PostgreSQL testing | `org.folio:postgres-testing` is declared with test scope. Its version is managed by `${raml-module-builder.version}`. |
+| FOLIO Kafka wrapper | `org.folio:folio-kafka-wrapper` is version `4.0.0`. |
+| Apache Kafka client | `org.apache.kafka:kafka-clients` is version `4.2.0`. |
+| S3-compatible storage | `FolioS3ClientFactory` and `FolioS3Client` are used in the profile-picture storage implementation. |
+
+The reviewed FOLIO Trillium guidance specifies Java 21/JDK 21, which aligns with the Java version declared by the module.
+
+A search for `aws` in `pom.xml` did not identify a matching dependency. This search alone does not establish whether the storage implementation's required libraries are absent, because they may use different names or be supplied transitively.
+
+**Finding**
+
+The declared Java version aligns with the cited FOLIO Trillium guidance. The available evidence does not establish that all production dependencies, transitive dependencies, and resolved versions comply with the applicable supported-technology requirements.
+
+**Recommended action**
+
+- Compare the effective production dependency tree, including transitive dependencies and resolved versions, with the official supported-technology requirements.
+- Confirm the versions of dependencies managed through the Maven configuration.
+- Verify which library provides the S3-compatible storage functionality and whether it meets the applicable requirements.
+
+**Status:** Manual verification required.
+
 ## 17. Consolidated status
 
 | Criterion | Preliminary result |
