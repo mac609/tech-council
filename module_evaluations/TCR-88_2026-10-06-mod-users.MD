@@ -553,25 +553,25 @@ Prioritize the remaining work as follows:
 
 3. **API endpoint documentation:** Verify where `/_/tenant` and `/_/tenant/{id}` are documented. Compare the handlers listed in the module descriptor with the relevant RAML documentation to confirm that the documentation and declared endpoints are consistent before marking this criterion fully satisfied.
 
-4. **API permissions:** Verify runtime enforcement, field-level protection, and completeness of permission mappings.
+4. **API permissions:** Further review would help confirm runtime enforcement, field-level protection, and the completeness of permission mappings.
 
-5. **Module descriptor and deployment descriptor:** Complete the endpoint-by-endpoint comparison and verify that declared permissions align with the implementation.
+5. **Module descriptor and deployment descriptor:** Complete the endpoint-by-endpoint comparison to confirm that declared permissions are consistent with the implementation.
 
-6. **Reference data:** Verify installation and upgrade behavior, including preservation of tenant-customized records.
+6. **Reference data:** Verify installation and upgrade behavior, including how tenant-customized records are preserved.
 
 7. **Integration tests:** Confirm which test suites pass and verify the applicable official support status of the testing technologies.
 
-8. **Tenant isolation:** Review or add tests using two distinct tenant IDs to confirm that one tenant cannot access another tenant's records.
+8. **Tenant isolation:** Review or add tests using two distinct tenant IDs to help confirm that one tenant cannot access another tenant's records.
 
-9. **`/admin/health`:** Confirm that the integration test passes in the applicable environment or verify the endpoint in a deployed environment.
+9. **`/admin/health`:** Confirm that the integration test passes in the applicable environment, or verify the endpoint in a deployed environment.
 
 10. **Dependency documentation:** Confirm the applicable documentation requirements for the optional `feesfines` and `configuration` dependencies.
 
-11. **High availability:** Review remaining storage and session-related code for local state or instance affinity, and test multi-instance behavior where practical.
+11. **High availability:** Review the remaining storage and session-related code for local state or instance affinity, and test multi-instance behavior where practical.
 
-12. **Supported technologies:** Compare the effective production dependency tree, including transitive dependencies and resolved versions, with the official supported-technologies requirements. Verify the S3-compatible storage library as well.
+12. **Supported technologies:** Compare the effective production dependency tree, including transitive dependencies and resolved versions, with the official supported-technologies requirements. Include the S3-compatible storage library in this review.
 
-13. **Database schema access:** Complete a broader review of SQL scripts and database access paths.
+13. **Database schema access:** Extend the review to the relevant SQL scripts and database access paths to confirm that the evaluation has sufficient evidence of the module's database behavior.
 
 ## 19. References
 
