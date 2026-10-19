@@ -223,32 +223,40 @@ RAML documentation exists for the principal `mod-users` resources, and shared do
 
 **Status:** Preliminary; final documentation coverage check outstanding.
 
-7. Module descriptor and deployment descriptor
-Assessment: Manual review required; no confirmed descriptor defect
-identified in the reviewed evidence.
-Evidence
-- ModuleDescriptor-template.json
-- DeploymentDescriptor-template.json
-- UsersAPI.java
-The module descriptor declares the module name and version, provided
-interfaces, API handlers, permissions, optional dependencies, and
-scheduled jobs. The deployment descriptor identifies the Java command
-used to launch the module. The reviewed UsersAPI.java implementation
-includes core user operations, profile-picture management,
-configuration, expiration, and outbox processing.
-The descriptor defines user-settings and custom-fields interfaces. The
-inspected custom-fields collection PUT handler requires
-user-settings.custom-fields.collection.put; this permission is
-declared in permissionSets and included in the
-user-settings.custom-fields.all composite permission. User-settings
-handlers similarly use individual permissions grouped by
-users.settings.all.
-Finding
-The reviewed files provide evidence of alignment between the descriptor
-and substantial parts of the implementation. A complete
-endpoint-by-endpoint and permission-by-permission comparison has not
-been performed.
-Status: Manual review required.
+## 7. Module descriptor and deployment descriptor
+
+**Assessment:** Manual review required.
+
+**Evidence**
+
+The review examined the following files:
+
+- `descriptors/ModuleDescriptor-template.json`
+- `descriptors/DeploymentDescriptor-template.json`
+- `UsersAPI.java`
+
+The module descriptor identifies the module version, interfaces, API handlers, permissions, optional dependencies, and scheduled jobs.
+
+The deployment descriptor specifies the Java launch command used to start the module.
+
+`UsersAPI.java` implements core user operations and includes functionality related to profile-picture management, configuration, expiration, and outbox processing.
+
+The module descriptor declares the custom-fields collection PUT permission as `user-settings.custom-fields.collection.put`. This permission is declared in `permissionSets` and included in the composite permission `user-settings.custom-fields.all`.
+
+User-settings handlers also use individual permissions grouped under `users.settings.all`.
+
+**Finding**
+
+The inspected descriptors and implementation provide evidence of alignment between selected API operations and their declarations. However, a complete comparison of every endpoint, its required permissions, and its implementation has not been performed.
+
+**Recommended action**
+
+- Compare all declared API handlers with the corresponding implementation.
+- Verify that each endpoint has the appropriate permission declarations.
+- Confirm that the declared permissions match the actual runtime authorization behavior.
+
+**Status:** Manual review required.
+
 8. Reference data
 Assessment: Evidence supports version-aware loading; installation and
 upgrade behavior are not fully verified.
