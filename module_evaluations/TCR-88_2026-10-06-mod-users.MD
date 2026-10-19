@@ -588,7 +588,7 @@ Prioritize the remaining work as follows:
 - [Deployment descriptor template](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/DeploymentDescriptor-template.json)
 - [Maven configuration (`pom.xml`)](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml)
 - [Module README](https://github.com/folio-org/mod-users/blob/v19.6.2/README.md)
-- [Personal-data disclosure (`PERSONAL_DATA_DISCLOSURE.md`)](https://github.com/folio-org/mod-users/blob/v19.6.2/PERSONAL_DATA_DISCOSURE.md)
+- [Personal-data disclosure (`PERSONAL_DATA_DISCOSURE.md`)](https://github.com/folio-org/mod-users/blob/v19.6.2/PERSONAL_DATA_DISCOSURE.md)
 - [RAML API documentation directory](https://github.com/folio-org/mod-users/tree/v19.6.2/ramls)
 - [Reference-data directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/main/resources)
 - [Integration-test directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/test/java)
@@ -599,6 +599,6 @@ Prioritize the remaining work as follows:
 - [FOLIO Technical Council repository](https://github.com/folio-org/tech-council)
 - [Shared FOLIO custom-fields repository](https://github.com/folio-org/folio-custom-fields)
 
-**Review status:** Preliminary evaluation updated October 16, 2026. Targeted follow-up and manual verification remain outstanding.
+**Review status:** Preliminary evaluation updated October 19, 2026. Targeted follow-up and manual verification remain outstanding.
 
 
