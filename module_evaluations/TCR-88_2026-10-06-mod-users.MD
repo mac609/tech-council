@@ -566,21 +566,24 @@ Prioritize the remaining work as follows:
 
 ## 19. References
 
-The evaluation used the following source materials:
+### Source code and module documentation
 
-- FOLIO `mod-users` version `v19.6.2` source code.
-- FOLIO Technical Council module acceptance criteria.
-- `descriptors/ModuleDescriptor-template.json`.
-- `descriptors/DeploymentDescriptor-template.json`.
-- Maven configuration (`pom.xml`).
-- Module README.
-- `PERSONAL_DATA_DISCLOSURE.md`.
-- RAML documentation in the `mod-users` repository.
-- Module descriptor from the reviewed `mod-users` fork snapshot.
-- Shared `folio-custom-fields` RAML documentation.
-- Reference-data files and implementation.
-- Integration-test classes.
-- `src/test/java/org/folio/rest/InstallUpgradeIT.java`, including the `/admin/health` test.
+- [FOLIO mod-users v19.6.2 source code](https://github.com/folio-org/mod-users/tree/v19.6.2)
+- [Module descriptor template](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/ModuleDescriptor-template.json)
+- [Deployment descriptor template](https://github.com/folio-org/mod-users/blob/v19.6.2/descriptors/DeploymentDescriptor-template.json)
+- [Maven configuration (`pom.xml`)](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml)
+- [Module README](https://github.com/folio-org/mod-users/blob/v19.6.2/README.md)
+- [Personal-data disclosure](https://github.com/folio-org/mod-users/blob/v19.6.2/PERSONAL_DATA_DISCLOSURE.md)
+- [RAML API documentation directory](https://github.com/folio-org/mod-users/tree/v19.6.2/ramls)
+- [Reference-data directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/main/resources)
+- [Integration-test directory](https://github.com/folio-org/mod-users/tree/v19.6.2/src/test/java)
+- [Install and upgrade integration tests](https://github.com/folio-org/mod-users/blob/v19.6.2/src/test/java/org/folio/rest/InstallUpgradeIT.java)
+
+### Related FOLIO documentation
+
+- [FOLIO Technical Council repository](https://github.com/folio-org/tech-council)
+- [Shared FOLIO custom-fields repository](https://github.com/folio-org/folio-custom-fields)
 
 **Review status:** Preliminary evaluation updated October 16, 2026. Targeted follow-up and manual verification remain outstanding.
+
 
