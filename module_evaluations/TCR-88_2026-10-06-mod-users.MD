@@ -160,6 +160,6 @@ Note: Backend criteria apply to modules, shared backend libraries, and edge modu
 
 ## TCR Process Improvements
 
-The automated evaluator's result should distinguish between finding/parsing a personal-data disclosure file and reviewing whether its contents are accurate and complete. In this run, semantic review was skipped because agent review was disabled or unconfigured. The summary reported 31 criteria: 5 passed, 0 failed, and 26 requiring manual review. Manual-review results should not be presented as passed criteria.
+[*Please include here any suggestions that you feel might improve the TCR Processes.*]
 
-[^1]: Refer to the [Officially Supported Technologies](https://folio-org.atlassian.net/wiki/spaces/TC/pages/5053681/Officially+Supported+Technologies) page for the most recent ACTIVE release.
+##
