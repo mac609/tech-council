@@ -134,7 +134,7 @@ Note: Backend criteria apply to modules, shared backend libraries, and edge modu
   - The AbstractRestTest.java test setup sets the tenant header, and RecordRepositoryImpl.java uses tenant-aware database access. Response isolation and consistent header handling across endpoints have not been verified.
 - [ ] Standard GET /admin/health endpoint returning a 200 response (5)
   - -note: read more at https://folio-org.atlassian.net/wiki/spaces/DD/pages/1777917/Back+End+Module+Health+Check+Protocol
-  - InstallUpgradeIT.java creates a Docker image, deploys it in the build environment, and tests GET /admin/health, expecting HTTP 200 with body OK. The reviewer provided a successful automated build run that executes InstallUpgradeIT. This supports the conclusion that the endpoint is covered by an integration test that runs in the automated build pipeline.
+  - [InstallUpgradeIT.java](https://github.com/folio-org/mod-users/blob/v19.6.2/src/test/java/org/folio/rest/InstallUpgradeIT.java#L43) creates a Docker image, deploys it in the build environment, and tests `GET /admin/health`, expecting HTTP 200 with body `OK`. The reviewer provided a [successful automated build run](https://github.com/folio-org/mod-users/actions/runs/38407868759/job/115332182136) that executes `InstallUpgradeIT`. This confirms that the health endpoint is covered by a test that runs in the automated build pipeline.
 - [ ] High Availability (HA) compliant (5, 14, 15)
   - Possible red flags:
     - Connection affinity / sticky sessions / etc. are used
