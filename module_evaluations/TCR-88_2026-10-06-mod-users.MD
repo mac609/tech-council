@@ -106,7 +106,6 @@ Use these conventions to indicate the status of each criterion.
   * _This can be evaluated by searching application descriptors across the folio-org GitHub organization (considering those applications part of the community platform) and confirming that this module only appears in the application descriptor of the one specified application._
   - Jira TCR-88 identifies `app-platform-minimal`, and the reviewed descriptor includes `mod-users`. A search confirming that the module appears in exactly one applicable Community LSP application descriptor has not been completed.
 * [ ] S010 — Gracefully handles the absence of third party systems or related configuration.
-* [ ] UNACCEPTABLE
   * _Note: This applies to optional third-party integrations and their configurations only. Required environment variables (those without sensible defaults) should fail fast on startup per the Environment Variables Policy._
 The review examined HTTP integration, database access, profile-picture storage, and Kafka event-processing code. Some inspected paths propagate errors, but the review did not establish whether optional services and missing configurations are handled appropriately in all relevant cases. The profile-picture retrieval path can return 404 for caught storage exceptions; whether this response is appropriate for different failure conditions remains to be verified. Further targeted review is needed before a definitive conclusion can be drawn.
 
