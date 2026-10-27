@@ -1,6 +1,6 @@
 # TCR-88 — mod-users Evaluation
 
-**Evaluation date:** 2026-10-06
+**Evaluation date:** October 6, 2026
 
 # FOLIO Module Acceptance Values and Criteria: mod-users
 
