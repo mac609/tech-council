@@ -87,16 +87,16 @@ Use these conventions to indicate the status of each criterion.
   - No confirmed exposure was identified in the material reviewed so far. The review scope is the [v19.6.2 source repository](https://github.com/folio-org/mod-users/tree/v19.6.2); a complete repository-wide check has not been documented.
 * [ ] There is no default for any password, access key, private key or any other credential (6)
   - No default credential was confirmed in the reviewed material. Further verification of configuration and startup paths is needed before concluding that the criterion is met.
-[x] ACCEPTABLE Written in a language and framework from official supported technologies (3,5)
+* [x] ACCEPTABLE Written in a language and framework from official supported technologies (3,5)
 The automated evaluator reported this criterion as passed for the `v19.6.2` release.
-[x] ACCEPTABLE Uses FOLIO interfaces already provided by previously accepted modules (3,5,12)
+* [x] ACCEPTABLE Uses FOLIO interfaces already provided by previously accepted modules (3,5,12)
 The automated evaluator reported this criterion as passed for the `v19.6.2` release.
-[x] ACCEPTABLE Must not depend on a FOLIO library that has not been approved through the TCR process.
+* [x] ACCEPTABLE Must not depend on a FOLIO library that has not been approved through the TCR process.
 The automated evaluator reported this criterion as passed for the `v19.6.2` release.
 * [ ] Sonarqube hasn't identified any security issues, any high or greater severity issues, or excessive (>3%) duplication (6); and any disabled or intentionally ignored rules/recommendations are reasonably justified.
   * See [Rule Customization](https://dev.folio.org/guides/code-analysis/#rule-customization) details. 
   - The available SonarQube snapshot reported no security issues, no security hotspots, and 0% duplication, with 26 other issues. The snapshot was labelled `19.7.0-SNAPSHOT`, rather than `v19.6.2`; verify the scan for the exact release and whether any rules were disabled or issues intentionally ignored. The release's [Maven configuration](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml) is the version reference for follow-up.
-[x] ACCEPTABLE Uses officially supported build tools (3,5,13)
+* [x] ACCEPTABLE Uses officially supported build tools (3,5,13)
 The automated evaluator reported this criterion as passed for the `v19.6.2` release.
 * [ ] Unit tests have 80% coverage or greater, and are based on [officially supported technologies](https://folio-org.atlassian.net/wiki/spaces/TC/pages/5053681/Officially+Supported+Technologies)[^1] (3, 4)
   - Test files are present. Overall coverage of at least 80% and alignment of the testing technologies with the supported list have not been established by the evidence reviewed.
