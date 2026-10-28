@@ -159,7 +159,7 @@ Note: Backend criteria apply to modules, shared backend libraries, and edge modu
   - The [ProfilePictureStorage.java](https://github.com/folio-org/mod-users/blob/v19.6.2/src/main/java/org/folio/service/storage/ProfilePictureStorage.java) profile-picture storage path uses an object-storage client with tenant-specific keys. That does not establish module-wide high-availability compliance. Verify that the module does not rely on local state, sticky sessions, or single-instance behavior.
 * [ ] Module only uses infrastructure / platform technologies on the [officially supported technologies](https://folio-org.atlassian.net/wiki/spaces/TC/pages/5053681/Officially+Supported+Technologies) list.[^1]
   * _e.g. PostgreSQL, ElasticSearch, etc._ (3, 5, 12)
-  - The [Maven configuration](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml) and inspected source use Java 21, Vert.x, Kafka, PostgreSQL, and FOLIO object-storage components. Verify all relevant direct and transitive technologies against the supported list for the release being evaluated; the automated evaluator's source revision has not yet been reconciled with `v19.6.2`.
+  - The [Maven configuration](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml) and inspected source use Java 21, Vert.x, Kafka, PostgreSQL, and FOLIO object-storage components. Verify all relevant direct and transitive technologies against the officially supported technologies list for the release being evaluated.
 
 ## TCR Process Improvements
 
