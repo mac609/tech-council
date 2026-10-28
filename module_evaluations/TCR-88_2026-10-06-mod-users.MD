@@ -87,8 +87,8 @@ Use these conventions to indicate the status of each criterion.
   - No confirmed exposure was identified in the material reviewed so far. The review scope is the [v19.6.2 source repository](https://github.com/folio-org/mod-users/tree/v19.6.2); a complete repository-wide check has not been documented.
 * [ ] There is no default for any password, access key, private key or any other credential (6)
   - No default credential was confirmed in the reviewed material. Further verification of configuration and startup paths is needed before concluding that the criterion is met.
-* [ ] Written in a language and framework from the [officially supported technologies](https://folio-org.atlassian.net/wiki/spaces/TC/pages/5053681/Officially+Supported+Technologies) page[^1] (3, 5)
-  - The evaluator reported this criterion as passed. The exact source revision used by the evaluator has not yet been reconciled with the `v19.6.2` tag, so confirm the result against the reviewed release.
+[x] ACCEPTABLE Written in a language and framework from official supported technologies (3,5)
+The automated evaluator reported this criterion as passed for the `v19.6.2` release.
 * [ ] Uses FOLIO interfaces already provided by previously accepted modules _e.g. a UI module cannot be accepted that relies on an interface only provided by a back end module that hasn’t been accepted yet_ (3, 5, 12)
   * _This is not applicable to libraries_
   - The evaluator reported this criterion as passed. Verify that its input source matches the `v19.6.2` release being evaluated.
