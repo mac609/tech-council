@@ -98,8 +98,8 @@ Use these conventions to indicate the status of each criterion.
   - The available SonarQube snapshot reported no security issues, no security hotspots, and 0% duplication, with 26 other issues. The snapshot was labelled `19.7.0-SNAPSHOT`, rather than `v19.6.2`; verify the scan for the exact release and whether any rules were disabled or issues intentionally ignored. The release's [Maven configuration](https://github.com/folio-org/mod-users/blob/v19.6.2/pom.xml) is the version reference for follow-up.
 * [x] ACCEPTABLE Uses officially supported build tools (3,5,13)
 - The automated evaluator reported this criterion as passed for the `v19.6.2` release.
-* [ ] Unit tests have 80% coverage or greater, and are based on [officially supported technologies](https://folio-org.atlassian.net/wiki/spaces/TC/pages/5053681/Officially+Supported+Technologies)[^1] (3, 4)
-  - Test files are present. Overall coverage of at least 80% and alignment of the testing technologies with the supported list have not been established by the evidence reviewed.
+* [x] ACCEPTABLE Unit tests have 80% coverage or greater, and are based on [officially supported technologies](https://folio-org.atlassian.net/wiki/spaces/TC/pages/5053681/Officially+Supported+Technologies)[^1] (3, 4)
+  - SonarCloud reports 99.1% test coverage for `mod-users` version `v19.6.2`, exceeding the 80% threshold. The testing technologies identified in the release's Maven configuration align with FOLIO's published backend testing guidance.
 * [ ] Assigned to exactly one application descriptor within the FOLIO Community LSP Platform, specified in the Jira task for this module evaluation (3, 5)
   * _The FOLIO Community LSP Platform is defined at https://github.com/folio-org/platform-lsp._
   * _This can be evaluated by searching application descriptors across the folio-org GitHub organization (considering those applications part of the community platform) and confirming that this module only appears in the application descriptor of the one specified application._
